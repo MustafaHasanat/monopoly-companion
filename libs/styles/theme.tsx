@@ -1,26 +1,16 @@
 "use client";
 
 import { PaletteMode } from "@mui/material";
-import { deepPurple } from "@mui/material/colors";
-
-declare module "@mui/material/styles" {
-    interface Palette {
-        newColor: Palette["primary"];
-    }
-
-    interface PaletteOptions {
-        newColor?: PaletteOptions["primary"];
-    }
-}
+import { blue } from "@mui/material/colors";
 
 declare module "@mui/material/styles" {
     interface BreakpointOverrides {
-        xs: false; // removes the `xs` breakpoint
+        xs: false;
         sm: false;
         md: false;
         lg: false;
         xl: false;
-        mobile: true; // adds the `mobile` breakpoint
+        mobile: true;
         tablet: true;
         laptop: true;
         desktop: true;
@@ -30,28 +20,25 @@ declare module "@mui/material/styles" {
 const getDesignTokens = (colorMode: PaletteMode) => ({
     palette: {
         mode: colorMode,
-        newColor: {
-            main: "#2b2b2b",
-            dark: "#2b2b2b",
-            light: "#fff",
-        },
         ...(colorMode === "dark"
             ? {
                   primary: {
-                      main: deepPurple[700],
+                      main: blue[600],
+                      dark: blue[900],
+                      light: blue[100],
                   },
                   secondary: {
-                      main: "#2b2b2b",
-                      contrastText: "#fff",
+                      main: "#1b1b1b",
+                      contrastText: "#FFF4EF",
                   },
               }
             : {
                   primary: {
-                      main: deepPurple[700],
+                      main: blue[500],
                   },
                   secondary: {
-                      main: "#fff",
-                      contrastText: "#2b2b2b",
+                      main: "#FFF4EF",
+                      contrastText: "#1b1b1b",
                   },
               }),
     },

@@ -7,13 +7,12 @@ import Body from "@/components/layout/body";
 import Modal from "@/components/layout/modal";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
-import Aside from "@/components/layout/aside";
 
 export const metadata: Metadata = {
-    title: "Website Title",
-    description: "Website Description",
+    title: "Monopoly Companion",
+    description: "The online monopoly banking system.",
     icons: {
-        icon: "/icons/favicon.ico",
+        icon: "/icons/dice.png",
     },
 };
 
@@ -35,7 +34,6 @@ export default function RootLayout({
                     <Modal />
                     <Header />
                     {children}
-                    <Aside />
                     <Footer />
                 </Body>
             </Providers>

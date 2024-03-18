@@ -1,21 +1,27 @@
 "use client";
 
-import { Container } from "@mui/material";
+import { Container, SxProps, useTheme } from "@mui/material";
 import { ReactNode } from "react";
+import Background from "./bg";
 
-const Main = ({ children }: { children: ReactNode }) => {
+const Main = ({ children, sx }: { children: ReactNode; sx?: SxProps }) => {
+    const theme = useTheme();
+
     return (
         <Container
             component="main"
             sx={{
                 display: "flex",
+                position: "relative",
                 flexDirection: "column",
-                justifyContent: "center",
+                justifyContent: "start",
                 alignItems: "center",
-                height: "100%",
-                backgroundColor: "#ffffffbb",
+                width: "100%",
+                backgroundColor: theme.palette.secondary.main,
+                ...sx,
             }}
         >
+            {/* <Background /> */}
             {children}
         </Container>
     );

@@ -14,6 +14,11 @@ const nextConfig = {
                 destination: "/en",
                 permanent: false
             },
+            {
+                source: "/auth",
+                destination: "/en/auth",
+                permanent: false
+            },
         ]
     },
 };

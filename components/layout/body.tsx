@@ -13,14 +13,13 @@ const Body = ({ children }: { children: ReactNode }) => {
             component="body"
             sx={{
                 direction: locale === "en" ? "ltr" : "rtl",
-                display: "grid",
-                gridTemplateColumns: "70% 30%",
-                gridTemplateRows: "100vh 70px",
+                display: "flex",
                 flexDirection: "column",
+                justifyContent: "start",
                 alignItems: "center",
                 minWidth: "100vw",
                 minHeight: "100vh",
-                p: "70px 0 0 0",
+                p: { mobile: "70px 0 0 0", laptop: "70px 0 0 0" },
                 m: 0,
             }}
         >
