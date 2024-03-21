@@ -2,7 +2,7 @@
 
 import {
     AppBar,
-    Box,
+    Avatar,
     Button,
     Link,
     Stack,
@@ -13,22 +13,24 @@ import {
 import useLocale from "@/hooks/useLocale";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
-import { ReactNode, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
 import LockIcon from "@mui/icons-material/Lock";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CasinoIcon from "@mui/icons-material/Casino";
+import { AuthContext } from "@/utils/context/auth-context";
+import { logout } from "@/app/[locale]/auth/action";
+import { userAvatarMapping } from "@/utils/constants";
+import { UserAvatar } from "@/utils/enums";
 
 const Header = () => {
-    const { data: session } = useSession();
     const theme = useTheme();
     const router = useRouter();
-    const { getDictLocales, getLocale } = useLocale();
-    const locale = getLocale();
+    const { getDictLocales } = useLocale();
     const { header } = getDictLocales();
     const [boxIsOpen, setBoxIsOpen] = useState(false);
+    const { session, user } = useContext(AuthContext);
 
     const buttonsStyles: SxProps = {
         height: "100%",
@@ -38,27 +40,29 @@ const Header = () => {
         text: string;
         onClick: () => void;
         Icon: ReactNode;
-    }[] = session?.user?.email
+    }[] = session?.access_token
         ? [
               {
                   text: header.play,
                   onClick: () => {
-                      router.push("game");
+                      setBoxIsOpen(false);
+                      router.push("lobby");
                   },
                   Icon: <SportsEsportsIcon sx={buttonsStyles} />,
               },
               {
                   text: header.account,
                   onClick: () => {
+                      setBoxIsOpen(false);
                       router.push("account");
                   },
-                  Icon: <SportsEsportsIcon sx={buttonsStyles} />,
+                  Icon: <ManageAccountsIcon sx={buttonsStyles} />,
               },
               {
                   text: header.logout,
                   onClick: () => {
-                      router.push("auth?active=login");
-                      signOut();
+                      setBoxIsOpen(false);
+                      logout();
                   },
                   Icon: <LockIcon sx={buttonsStyles} />,
               },
@@ -92,7 +96,7 @@ const Header = () => {
                 top: 0,
                 zIndex: 100,
                 width: "100vw",
-                height: { mobile: "70px", laptop: "70px" },
+                height: "70px",
                 direction: "ltr",
                 p: { mobile: "0 20px", laptop: "0 40px" },
                 display: "flex",
@@ -118,7 +122,10 @@ const Header = () => {
                         width: "auto",
                     }}
                 />
-                <Typography fontSize={{ mobile: "25px", laptop: "30px" }}>
+                <Typography
+                    fontSize={{ mobile: "15px", laptop: "30px" }}
+                    textOverflow="ellipsis"
+                >
                     {header.brandName}
                 </Typography>
             </Link>
@@ -132,13 +139,20 @@ const Header = () => {
                     width: "auto",
                 }}
             >
-                <ManageAccountsIcon
-                    sx={{
-                        color: theme.palette.secondary.contrastText,
-                        width: "100%",
-                        height: "100%",
-                    }}
-                />
+                {session?.access_token ? (
+                    <Avatar
+                        variant="circular"
+                        src={userAvatarMapping()[user?.avatar as UserAvatar]}
+                    />
+                ) : (
+                    <ManageAccountsIcon
+                        sx={{
+                            color: theme.palette.secondary.contrastText,
+                            width: "100%",
+                            height: "100%",
+                        }}
+                    />
+                )}
             </Button>
 
             <Stack

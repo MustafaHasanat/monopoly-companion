@@ -1,12 +1,14 @@
-import "@/libs/styles/global.css";
+import "@/utils/styles/global.css";
 import type { Metadata } from "next";
-import { Providers } from "../../libs/context/providers";
-import { Locale, i18n } from "@/libs/configs/i18n.config";
+import { Providers } from "../../utils/context/providers";
+import { Locale, i18n } from "@/utils/configs/i18n.config";
 import Script from "next/script";
 import Body from "@/components/layout/body";
 import Modal from "@/components/layout/modal";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import SnackbarWrapper from "../../components/layout/snackbar";
+import { createClient } from "@/utils/supabase/server";
 
 export const metadata: Metadata = {
     title: "Monopoly Companion",
@@ -20,21 +22,30 @@ export async function generateStaticParams() {
     return i18n.locales.map((locale) => ({ locale }));
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
     params,
 }: Readonly<{
     children: React.ReactNode;
     params: { locale: Locale };
 }>) {
+    const supabase = createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
+
     return (
         <html lang={params.locale}>
             <Providers>
-                <Body>
+                <Body user={user} session={session}>
                     <Modal />
                     <Header />
                     {children}
                     <Footer />
+                    <SnackbarWrapper />
                 </Body>
             </Providers>
 

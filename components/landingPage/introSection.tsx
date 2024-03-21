@@ -1,7 +1,7 @@
 "use client";
 
 import useLocale from "@/hooks/useLocale";
-import { Avatar, Container, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { ContainedButton } from "../shared/button";
 import AnimatedBoard from "./animatedBoard";
 

@@ -16,7 +16,7 @@ export default function Auth() {
         <Main
             sx={{
                 justifyContent: "center",
-                py: "60px",
+                py: { mobile: "10px", laptop: "60px" },
                 minHeight: { mobile: "80vh", laptop: "100vh" },
             }}
         >
@@ -27,7 +27,7 @@ export default function Auth() {
                 offsetMove={400}
                 boxSX={{
                     width: { mobile: "80vw", laptop: "30vw" },
-                    height: { mobile: "65vh", laptop: "70vh" },
+                    height: { mobile: "55vh", laptop: "70vh" },
                 }}
             />
         </Main>

@@ -17,11 +17,11 @@ const Main = ({ children, sx }: { children: ReactNode; sx?: SxProps }) => {
                 justifyContent: "start",
                 alignItems: "center",
                 width: "100%",
+                minHeight: { mobile: "100vh", laptop: "70vh" },
                 backgroundColor: theme.palette.secondary.main,
                 ...sx,
             }}
         >
-            {/* <Background /> */}
             {children}
         </Container>
     );

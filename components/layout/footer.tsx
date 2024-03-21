@@ -102,7 +102,12 @@ const Footer = ({}) => {
                 gap: "20px",
             }}
         >
-            <Stack direction="row" justifyContent="center" alignItems="center">
+            <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                flexWrap="wrap"
+            >
                 {socials.map(({ icon, url }, index) => (
                     <Link href={url} key={`footer social: ${index}`}>
                         <IconButton
@@ -118,6 +123,8 @@ const Footer = ({}) => {
             </Stack>
             <Typography
                 textTransform="capitalize"
+                width="90%"
+                textAlign="center"
                 sx={{
                     opacity: 0.7,
                 }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { ControlsContext } from "@/libs/context/controls-context";
+import { ControlsContext } from "@/utils/context/controls-context";
 import { Box } from "@mui/material";
 import { ReactNode, useContext } from "react";
 

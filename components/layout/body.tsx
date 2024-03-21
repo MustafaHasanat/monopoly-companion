@@ -1,12 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import useLocale from "@/hooks/useLocale";
+import { AuthContext } from "@/utils/context/auth-context";
+import { normalizeUser } from "@/utils/helpers/auth";
 import { Box } from "@mui/material";
-import { ReactNode } from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { ReactNode, useContext, useEffect } from "react";
 
-const Body = ({ children }: { children: ReactNode }) => {
+interface Props {
+    children: ReactNode;
+    user: User | null;
+    session: Session | null;
+}
+
+const Body = ({ children, user, session }: Props) => {
     const { getLocale } = useLocale();
     const locale = getLocale();
+    const { setUser, setSession } = useContext(AuthContext);
+
+    useEffect(() => {
+        setUser(normalizeUser(user));
+        setSession(session);
+    }, [user, session]);
 
     return (
         <Box

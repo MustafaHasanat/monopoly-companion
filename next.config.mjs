@@ -19,6 +19,26 @@ const nextConfig = {
                 destination: "/en/auth",
                 permanent: false
             },
+            {
+                source: "/account",
+                destination: "/en/account",
+                permanent: false
+            },
+            {
+                source: "/lobby",
+                destination: "/en/lobby",
+                permanent: false
+            },
+            {
+                source: "/game",
+                destination: "/en/game",
+                permanent: false
+            },
+            {
+                source: "/error",
+                destination: "/en/error",
+                permanent: false
+            },    
         ]
     },
 };

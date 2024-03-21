@@ -7,15 +7,16 @@ import useLocale from "@/hooks/useLocale";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginSchema from "./schemas/login";
-
-interface FormData {
-    email: string;
-    password: string;
-}
+import { ControlsContext } from "@/utils/context/controls-context";
+import { useContext } from "react";
+import { useRouter } from "next/navigation";
+import { login } from "@/app/[locale]/auth/action";
 
 const Login = () => {
     const { getDictLocales } = useLocale();
     const { auth } = getDictLocales();
+    const { setSnackbarState } = useContext(ControlsContext);
+    const router = useRouter();
 
     const {
         control,
@@ -23,23 +24,42 @@ const Login = () => {
         formState: { errors },
     } = useForm({
         resolver: yupResolver(loginSchema),
+        defaultValues: {
+            email: "mustafa@gmail.com",
+            password: "Test12345678",
+        },
     });
 
-    const onSubmit = (data: FormData) => {
-        console.log(data);
+    const onSubmit = async (formData: { email: string; password: string }) => {
+        const response = await login(formData);
+
+        if (!response.error) {
+            setSnackbarState({
+                message: "Logged in successfully",
+                severity: "success",
+            });
+            setTimeout(() => {
+                router.push("/");
+            }, 2000);
+        } else {
+            setSnackbarState({
+                message: response.error.message,
+                severity: "error",
+            });
+        }
     };
 
     return (
         <Grid
             container
             justifyContent="center"
-            alignContent="space-between"
+            alignContent="space-around"
             component="form"
             onSubmit={handleSubmit(onSubmit)}
             sx={{
                 width: "100%",
                 height: "100%",
-                p: "10px 20px",
+                p: "20px",
                 overflow: "hidden",
             }}
         >
@@ -67,6 +87,7 @@ const Login = () => {
                     render={({ field }) => (
                         <TextFieldForm
                             {...field}
+                            type="password"
                             label={auth.password}
                             error={!!errors.password}
                             helperText={errors.password?.message}
@@ -84,19 +105,17 @@ const Login = () => {
                     {auth.login}
                 </ContainedButton>
             </Grid>
-            <Grid container item mobile={12}>
-                <Grid
-                    item
-                    mobile={6}
-                    justifyContent="center"
-                    alignItems="center"
-                    textAlign="start"
-                >
-                    <Link href="/">{auth.forgotPass}</Link>
-                </Grid>
-                <Grid item mobile={6} textAlign="end">
-                    <Link href="/auth?active=register">{auth.register}</Link>
-                </Grid>
+            <Grid
+                item
+                mobile={6}
+                justifyContent="center"
+                alignItems="center"
+                textAlign="start"
+            >
+                <Link href="/">{auth.forgotPass}</Link>
+            </Grid>
+            <Grid item mobile={6} textAlign="end">
+                <Link href="/auth?active=register">{auth.register}</Link>
             </Grid>
         </Grid>
     );

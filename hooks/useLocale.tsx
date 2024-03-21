@@ -1,8 +1,8 @@
 "use client";
 
-import { Locale } from "@/libs/configs/i18n.config";
-import ar from "@/libs/locales/ar";
-import en from "@/libs/locales/en";
+import { Locale } from "@/utils/configs/i18n.config";
+import ar from "@/utils/locales/ar";
+import en from "@/utils/locales/en";
 import { usePathname, useRouter } from "next/navigation";
 
 const redirectedPathName = (locale: string, pathname: string) => {
