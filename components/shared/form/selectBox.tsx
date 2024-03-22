@@ -1,35 +1,72 @@
-import { BaseSelectProps, MenuItem, Select, SxProps } from "@mui/material";
+import {
+    BaseSelectProps,
+    MenuItem,
+    Select,
+    SelectProps,
+    SxProps,
+    InputLabel,
+    FormControl,
+    Typography,
+} from "@mui/material";
 import { useState } from "react";
 
 interface Props extends BaseSelectProps {
     initialValue: string | number;
     values: (string | number)[];
+    helperText?: string;
     labels?: string[];
-    sx?: SxProps;
+    containerSX?: SxProps;
 }
 
 export function SelectBox({
-    sx,
+    containerSX,
     initialValue,
     values,
     labels,
+    helperText,
     ...rest
-}: Props) {
+}: Props & Omit<SelectProps, "variant">) {
     const [value, setValue] = useState<string | number>(initialValue);
 
     return (
-        <Select
-            value={value}
-            onChange={(event: any) => {
-                setValue(event.target.value as string | number);
+        <FormControl
+            sx={{
+                width: "100%",
+                ...containerSX,
             }}
-            {...rest}
         >
-            {values.map((item, index) => (
-                <MenuItem key={`select: ${index}`} value={item}>
-                    {labels ? labels[index] : item}
-                </MenuItem>
-            ))}
-        </Select>
+            <InputLabel
+                sx={{
+                    textTransform: "capitalize",
+                }}
+            >
+                {rest.label}
+            </InputLabel>
+            <Select
+                variant="outlined"
+                value={value}
+                onChange={(event: any) => {
+                    setValue(event.target.value as string | number);
+                }}
+                {...rest}
+            >
+                {values.map((item, index) => (
+                    <MenuItem key={`select: ${index}`} value={item}>
+                        {labels ? labels[index] : item}
+                    </MenuItem>
+                ))}
+            </Select>
+            {helperText && (
+                <Typography
+                    color="error"
+                    sx={{
+                        mt: "10px",
+                        fontSize: "13px",
+                    }}
+                >
+                    {helperText}
+                </Typography>
+            )}
+        </FormControl>
     );
 }

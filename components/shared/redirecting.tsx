@@ -1,19 +1,14 @@
 "use client";
 
-import { CircularProgress, Typography } from "@mui/material";
-import Main from "../layout/main";
 import useLocale from "@/hooks/useLocale";
+import { CircularProgress, Container, Typography } from "@mui/material";
 
-interface Props {
-    phrase?: string;
-}
-
-const LoadingPage = ({ phrase }: Props) => {
+const Redirecting = ({}) => {
     const { getDictLocales } = useLocale();
     const { global } = getDictLocales();
 
     return (
-        <Main
+        <Container
             sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -24,10 +19,10 @@ const LoadingPage = ({ phrase }: Props) => {
                 gap: 5,
             }}
         >
-            <Typography variant="h3">{phrase || global.loading}</Typography>
+            <Typography variant="h3">{global.redirecting}</Typography>
             <CircularProgress size={100} />
-        </Main>
+        </Container>
     );
 };
 
-export default LoadingPage;
+export default Redirecting;

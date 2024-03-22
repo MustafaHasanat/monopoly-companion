@@ -1,24 +1,20 @@
 "use client";
 
 import Main from "@/components/layout/main";
+import LobbyContainer from "@/components/lobby";
 
 export default function Lobby() {
     return (
         <Main
             sx={{
-                maxHeight: "100vh",
-                minHeight: "100vh",
+                maxHeight: { mobile: "80vh", laptop: "100vh" },
+                minHeight: { mobile: "80vh", laptop: "100vh" },
+                width: "100vw",
                 overflow: "hidden",
-                color: "white",
+                p: 0,
             }}
         >
-            {Array(100)
-                .fill("lobby page")
-                .map((item, index) => (
-                    <div key={index}>
-                        {index} {item}
-                    </div>
-                ))}
+            <LobbyContainer />
         </Main>
     );
 }

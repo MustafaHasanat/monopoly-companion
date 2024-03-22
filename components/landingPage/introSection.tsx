@@ -4,10 +4,15 @@ import useLocale from "@/hooks/useLocale";
 import { Container, Typography } from "@mui/material";
 import { ContainedButton } from "../shared/button";
 import AnimatedBoard from "./animatedBoard";
+import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { AuthContext } from "@/utils/context/auth-context";
 
 const IntroSection = () => {
     const { getDictLocales } = useLocale();
     const { landingPage } = getDictLocales();
+    const router = useRouter();
+    const { session } = useContext(AuthContext);
 
     return (
         <Container
@@ -39,7 +44,11 @@ const IntroSection = () => {
             </Typography>
 
             <ContainedButton
-                onClick={() => {}}
+                onClick={() => {
+                    router.replace(
+                        session?.access_token ? "/lobby" : "/auth?active=login"
+                    );
+                }}
                 sx={{
                     m: "auto 0",
                     fontSize: { mobile: "20px", laptop: "30px" },

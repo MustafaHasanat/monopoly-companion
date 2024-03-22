@@ -3,15 +3,11 @@ import { ReactNode } from "react";
 
 interface Props {
     children: ReactNode;
-    onClick?: () => void;
-    Icon?: ReactNode;
     sx?: SxProps;
 }
 
 export const ContainedButton = ({
     children,
-    onClick,
-    Icon,
     sx,
     ...rest
 }: Props & ButtonProps) => {
@@ -35,8 +31,6 @@ export const ContainedButton = ({
                 },
                 ...sx,
             }}
-            onClick={onClick}
-            startIcon={Icon}
             {...rest}
         >
             {children}

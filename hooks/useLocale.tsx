@@ -33,11 +33,11 @@ export default function useLocale() {
         /** toggle between AR and EN */
         toggleLocale: (locale?: Locale) => {
             const newPath = redirectedPathName(
-                locale ? locale : getLocale(pathName) === "en" ? "ar" : "en",
+                locale || getLocale(pathName) === "en" ? "ar" : "en",
                 pathName
             );
 
-            router.push(newPath);
+            router.replace(newPath);
         },
     };
 }

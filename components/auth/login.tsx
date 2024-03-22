@@ -39,8 +39,8 @@ const Login = () => {
                 severity: "success",
             });
             setTimeout(() => {
-                router.push("/");
-            }, 2000);
+                router.replace("/lobby");
+            }, 1500);
         } else {
             setSnackbarState({
                 message: response.error.message,

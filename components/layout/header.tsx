@@ -7,6 +7,7 @@ import {
     Link,
     Stack,
     SxProps,
+    Tooltip,
     Typography,
     useTheme,
 } from "@mui/material";
@@ -21,13 +22,14 @@ import { useRouter } from "next/navigation";
 import CasinoIcon from "@mui/icons-material/Casino";
 import { AuthContext } from "@/utils/context/auth-context";
 import { logout } from "@/app/[locale]/auth/action";
-import { userAvatarMapping } from "@/utils/constants";
+import { GAME_CODE, userAvatarMapping } from "@/utils/constants";
 import { UserAvatar } from "@/utils/enums";
+import LanguageIcon from "@mui/icons-material/Language";
 
 const Header = () => {
     const theme = useTheme();
     const router = useRouter();
-    const { getDictLocales } = useLocale();
+    const { getDictLocales, toggleLocale } = useLocale();
     const { header } = getDictLocales();
     const [boxIsOpen, setBoxIsOpen] = useState(false);
     const { session, user } = useContext(AuthContext);
@@ -46,7 +48,7 @@ const Header = () => {
                   text: header.play,
                   onClick: () => {
                       setBoxIsOpen(false);
-                      router.push("lobby");
+                      router.replace("lobby");
                   },
                   Icon: <SportsEsportsIcon sx={buttonsStyles} />,
               },
@@ -54,7 +56,7 @@ const Header = () => {
                   text: header.account,
                   onClick: () => {
                       setBoxIsOpen(false);
-                      router.push("account");
+                      router.replace("account");
                   },
                   Icon: <ManageAccountsIcon sx={buttonsStyles} />,
               },
@@ -62,7 +64,9 @@ const Header = () => {
                   text: header.logout,
                   onClick: () => {
                       setBoxIsOpen(false);
+                      window.localStorage.removeItem(GAME_CODE);
                       logout();
+                      router.replace("/auth");
                   },
                   Icon: <LockIcon sx={buttonsStyles} />,
               },
@@ -72,7 +76,7 @@ const Header = () => {
                   text: header.login,
                   onClick: () => {
                       setBoxIsOpen(false);
-                      router.push("auth?active=login");
+                      router.replace("auth?active=login");
                   },
                   Icon: <LoginIcon sx={buttonsStyles} />,
               },
@@ -80,7 +84,7 @@ const Header = () => {
                   text: header.register,
                   onClick: () => {
                       setBoxIsOpen(false);
-                      router.push("auth?active=register");
+                      router.replace("auth?active=register");
                   },
                   Icon: <PersonAddIcon sx={buttonsStyles} />,
               },
@@ -90,7 +94,6 @@ const Header = () => {
         <AppBar
             component="header"
             sx={{
-                position: "fixed",
                 backgroundColor: theme.palette.primary.main,
                 left: 0,
                 top: 0,
@@ -129,6 +132,27 @@ const Header = () => {
                     {header.brandName}
                 </Typography>
             </Link>
+
+            <Button
+                onClick={() => {
+                    toggleLocale();
+                }}
+                sx={{
+                    height: { mobile: "60%", laptop: "70%" },
+                    width: "auto",
+                    ml: "auto",
+                    color: theme.palette.secondary.contrastText,
+                }}
+            >
+                <Tooltip title={header.lang}>
+                    <LanguageIcon
+                        sx={{
+                            width: "100%",
+                            height: "100%",
+                        }}
+                    />
+                </Tooltip>
+            </Button>
 
             <Button
                 onClick={() => {

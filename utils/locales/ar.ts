@@ -1,4 +1,8 @@
 const ar = {
+    global: {
+        loading: "Loading ..",
+        redirecting: "Wrong entrance, you're being redirected ..",
+    },
     header: {
         brandName: "Monopoly Companion",
         login: "Login",
@@ -6,6 +10,7 @@ const ar = {
         logout: "Logout",
         play: "Play",
         account: "Account",
+        lang: "English",
     },
     landingPage: {
         welcome: "Welcome to Monopoly Companion",
@@ -27,6 +32,35 @@ const ar = {
         avatar: "avatar",
         save: "Save",
         savePass: "Save password",
+    },
+    lobby: {
+        start: {
+            title1: "Do you want to ",
+            title2: " a new game or ",
+            title3: "an existing one?",
+            create: "create",
+            join: "join",
+            createButton: "Create a Game",
+            joinButton: "Join a Game",
+        },
+        join: {
+            title: "Join a Game",
+            code: "Game code",
+            joinButton: "Join",
+        },
+        create: {
+            title: "Create a new Game",
+            template: "Game template",
+            details: "Template details",
+            createButton: "Create",
+        },
+        waiting: {
+            title: "Waiting for the host to let you in ..",
+            host: "Host: ",
+            code: "Code: ",
+        },
+        backButton: "Back",
+        cancelButton: "Cancel",
     },
     footer: {
         copyRights: "",

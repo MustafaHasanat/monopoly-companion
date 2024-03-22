@@ -1,26 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schemas/account";
 import { AuthContext } from "@/utils/context/auth-context";
 import { updateProfile } from "@/app/[locale]/account/action";
-import { Avatar, Grid, OutlinedInput, Select, Typography } from "@mui/material";
+import { Avatar, Container, Grid, OutlinedInput } from "@mui/material";
 import { SelectBox, TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
 import { UserAvatar } from "@/utils/enums";
 import { userAvatarMapping } from "@/utils/constants";
 import { ContainedButton } from "../shared/button";
 import { ControlsContext } from "@/utils/context/controls-context";
+import { useRouter } from "next/navigation";
+import LoadingPage from "../shared/loading";
 
 const AccountForm = () => {
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
-    const { user } = useContext(AuthContext);
+    const { user, session } = useContext(AuthContext);
     const { setSnackbarState } = useContext(ControlsContext);
     const { getDictLocales } = useLocale();
-    const { auth } = getDictLocales();
+    const { auth, global } = getDictLocales();
+    const router = useRouter();
+
+    if (!session?.access_token) {
+        setTimeout(() => {
+            router.replace("/auth?active=login");
+        }, 2000);
+    }
 
     const {
         control,
@@ -64,11 +73,12 @@ const AccountForm = () => {
                 });
             });
 
-            console.log(response);
-            
+        console.log(response);
     };
 
-    return (
+    return !session?.access_token ? (
+        <LoadingPage phrase={global.redirecting} />
+    ) : (
         <Grid
             container
             rowGap={5}
@@ -106,11 +116,10 @@ const AccountForm = () => {
                         <SelectBox
                             {...field}
                             initialValue={user?.avatar || UserAvatar.M1}
+                            label={auth.avatar}
                             values={Object.keys(UserAvatar)}
                             labels={Object.values(userAvatarMapping(true))}
-                            input={<OutlinedInput label="Avatar" />}
                             error={!!errors.avatar}
-                            sx={{}}
                         />
                     )}
                 />

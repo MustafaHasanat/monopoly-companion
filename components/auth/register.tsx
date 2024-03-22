@@ -1,6 +1,6 @@
 "use client";
 
-import { Typography, useTheme, Grid, Link } from "@mui/material";
+import { Typography, Grid, Link } from "@mui/material";
 import { ContainedButton } from "../shared/button";
 import { TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
@@ -10,10 +10,9 @@ import registerSchema from "./schemas/register";
 import { ControlsContext } from "@/utils/context/controls-context";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
-import { register } from "@/app/[locale]/auth/action";
+import { login, register } from "@/app/[locale]/auth/action";
 
 const Register = () => {
-    const theme = useTheme();
     const { getDictLocales } = useLocale();
     const { auth } = getDictLocales();
     const { setSnackbarState } = useContext(ControlsContext);
@@ -42,12 +41,27 @@ const Register = () => {
 
         if (!response.error) {
             setSnackbarState({
-                message: "User is created",
+                message: "User is created, logging you in ..",
                 severity: "success",
             });
-            setTimeout(() => {
-                router.push("/auth?active=login");
-            }, 2000);
+
+            const loginResponse = await login(formData);
+
+            if (!loginResponse.error) {
+                setSnackbarState({
+                    message: "Logged in successfully",
+                    severity: "success",
+                });
+
+                setTimeout(() => {
+                    router.replace("/lobby");
+                }, 1500);
+            } else {
+                setSnackbarState({
+                    message: loginResponse.error.message,
+                    severity: "error",
+                });
+            }
         } else {
             setSnackbarState({
                 message: response.error.message,
