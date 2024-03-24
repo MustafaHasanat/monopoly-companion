@@ -11,12 +11,15 @@ import { ControlsContext } from "@/utils/context/controls-context";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/[locale]/auth/action";
+import { useDispatch } from "react-redux";
+import { controlsSlice } from "@/utils/redux/controls-slice";
 
 const Login = () => {
     const { getDictLocales } = useLocale();
     const { auth } = getDictLocales();
-    const { setSnackbarState } = useContext(ControlsContext);
     const router = useRouter();
+    // const { setSnackbarState } = useContext(ControlsContext);
+    const dispatch = useDispatch();
 
     const {
         control,
@@ -34,18 +37,34 @@ const Login = () => {
         const response = await login(formData);
 
         if (!response.error) {
-            setSnackbarState({
-                message: "Logged in successfully",
-                severity: "success",
-            });
+            // setSnackbarState({
+            //     message: "Logged in successfully",
+            //     severity: "success",
+            // });
+            dispatch(
+                controlsSlice.actions.setSnackbarState({
+                    snackbarState: {
+                        message: "Logged in successfully",
+                        severity: "success",
+                    },
+                })
+            );
             setTimeout(() => {
                 router.replace("/lobby");
             }, 1500);
         } else {
-            setSnackbarState({
-                message: response.error.message,
-                severity: "error",
-            });
+            // setSnackbarState({
+            //     message: response.error.message,
+            //     severity: "error",
+            // });
+            dispatch(
+                controlsSlice.actions.setSnackbarState({
+                    snackbarState: {
+                        message: response.error.message,
+                        severity: "error",
+                    },
+                })
+            );
         }
     };
 

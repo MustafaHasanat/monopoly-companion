@@ -1,7 +1,12 @@
 "use client";
 
+import MainWindow from "@/components/game/mainWindow";
 import Main from "@/components/layout/main";
 
-export default function Game() {
-    return <Main>game page</Main>;
+export default function Dashboard() {
+    return (
+        <Main>
+            <MainWindow />
+        </Main>
+    );
 }

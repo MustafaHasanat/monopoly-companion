@@ -8,20 +8,25 @@ import joinSchema from "./schemas/joinGame";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
 import { TextFieldForm } from "../shared/form";
-import { getGameByCode } from "@/app/[locale]/lobby/action";
+import { getGameByCode } from "@/app/[locale]/game/action";
 import { ControlsContext } from "@/utils/context/controls-context";
-import { CordsType, GameType } from "@/utils/types";
+import { CordsType } from "@/utils/types";
 import { LOBBY_CORDS } from "@/utils/constants/game";
+import { GameContext } from "@/utils/context/game-context";
+import { useDispatch, useSelector } from "react-redux";
+import { controlsSlice } from "@/utils/redux/controls-slice";
+import { gameSlice } from "@/utils/redux/game-slice";
 
 interface Props {
-    setGame: Dispatch<SetStateAction<GameType | null>>;
     setCords: Dispatch<SetStateAction<CordsType>>;
 }
 
-const JoinGame = ({ setGame, setCords }: Props) => {
+const JoinGame = ({ setCords }: Props) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
-    const { setSnackbarState } = useContext(ControlsContext);
+    // const { setSnackbarState } = useContext(ControlsContext);
+    // const { setGame } = useContext(GameContext);
+    const dispatch = useDispatch();
 
     const {
         control,
@@ -38,23 +43,53 @@ const JoinGame = ({ setGame, setCords }: Props) => {
 
         if (!response.error) {
             if (response?.data.length !== 0) {
-                setSnackbarState({
-                    message: "Correct game code, join request is sent",
-                    severity: "success",
-                });
-                setGame(response?.data[0] as GameType);
+                dispatch(
+                    controlsSlice.actions.setSnackbarState({
+                        snackbarState: {
+                            message: "Correct game code, join request is sent",
+                            severity: "success",
+                        },
+                    })
+                );
+                // setSnackbarState({
+                //     message: "Correct game code, join request is sent",
+                //     severity: "success",
+                // });
+                dispatch(
+                    gameSlice.actions.setGame({
+                        game: response?.data[0],
+                    })
+                );
+                // setGame(response?.data[0]);
                 setCords(LOBBY_CORDS.waiting);
             } else {
-                setSnackbarState({
-                    message: "Wrong game code or game doesn't exist, try again",
-                    severity: "error",
-                });
+                dispatch(
+                    controlsSlice.actions.setSnackbarState({
+                        snackbarState: {
+                            message:
+                                "Wrong game code or game doesn't exist, try again",
+                            severity: "error",
+                        },
+                    })
+                );
+                // setSnackbarState({
+                //     message: "Wrong game code or game doesn't exist, try again",
+                //     severity: "error",
+                // });
             }
         } else {
-            setSnackbarState({
-                message: response.error.message,
-                severity: "error",
-            });
+            dispatch(
+                controlsSlice.actions.setSnackbarState({
+                    snackbarState: {
+                        message: response.error.message,
+                        severity: "error",
+                    },
+                })
+            );
+            // setSnackbarState({
+            //     message: response.error.message,
+            //     severity: "error",
+            // });
         }
     };
 

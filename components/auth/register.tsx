@@ -11,11 +11,14 @@ import { ControlsContext } from "@/utils/context/controls-context";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { login, register } from "@/app/[locale]/auth/action";
+import { useDispatch } from "react-redux";
+import { controlsSlice } from "@/utils/redux/controls-slice";
 
 const Register = () => {
     const { getDictLocales } = useLocale();
     const { auth } = getDictLocales();
-    const { setSnackbarState } = useContext(ControlsContext);
+    // const { setSnackbarState } = useContext(ControlsContext);
+    const dispatch = useDispatch();
     const router = useRouter();
 
     const {
@@ -40,33 +43,65 @@ const Register = () => {
         const response = await register(formData);
 
         if (!response.error) {
-            setSnackbarState({
-                message: "User is created, logging you in ..",
-                severity: "success",
-            });
+            dispatch(
+                controlsSlice.actions.setSnackbarState({
+                    snackbarState: {
+                        message: "User is created, logging you in ..",
+                        severity: "success",
+                    },
+                })
+            );
+            // setSnackbarState({
+            //     message: "User is created, logging you in ..",
+            //     severity: "success",
+            // });
 
             const loginResponse = await login(formData);
 
             if (!loginResponse.error) {
-                setSnackbarState({
-                    message: "Logged in successfully",
-                    severity: "success",
-                });
+                dispatch(
+                    controlsSlice.actions.setSnackbarState({
+                        snackbarState: {
+                            message: "Logged in successfully",
+                            severity: "success",
+                        },
+                    })
+                );
+                // setSnackbarState({
+                //     message: "Logged in successfully",
+                //     severity: "success",
+                // });
 
                 setTimeout(() => {
                     router.replace("/lobby");
                 }, 1500);
             } else {
-                setSnackbarState({
-                    message: loginResponse.error.message,
-                    severity: "error",
-                });
+                dispatch(
+                    controlsSlice.actions.setSnackbarState({
+                        snackbarState: {
+                            message: loginResponse.error.message,
+                            severity: "error",
+                        },
+                    })
+                );
+                // setSnackbarState({
+                //     message: loginResponse.error.message,
+                //     severity: "error",
+                // });
             }
         } else {
-            setSnackbarState({
-                message: response.error.message,
-                severity: "error",
-            });
+            dispatch(
+                controlsSlice.actions.setSnackbarState({
+                    snackbarState: {
+                        message: response.error.message,
+                        severity: "error",
+                    },
+                })
+            );
+            // setSnackbarState({
+            //     message: response.error.message,
+            //     severity: "error",
+            // });
         }
     };
 

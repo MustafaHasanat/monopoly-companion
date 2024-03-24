@@ -1,11 +1,15 @@
 "use client";
 
 import { ControlsContext } from "@/utils/context/controls-context";
+import { controlsSlice, selectControls } from "@/utils/redux/controls-slice";
 import { Box } from "@mui/material";
 import { ReactNode, useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Modal = () => {
-    const { modalContent, setModalIsOpen } = useContext(ControlsContext);
+    // const { modalContent, setModalIsOpen } = useContext(ControlsContext);
+    const dispatch = useDispatch();
+    const { modalContent } = useSelector(selectControls);
 
     const ModalMap: { [key: string]: ReactNode } = {
         none: <></>,
@@ -16,7 +20,12 @@ const Modal = () => {
         <Box
             component="button"
             onClick={() => {
-                setModalIsOpen("form");
+                dispatch(
+                    controlsSlice.actions.setModalContent({
+                        modalContent: "form",
+                    })
+                );
+                // setModalIsOpen("form");
             }}
             sx={{
                 position: "fixed",

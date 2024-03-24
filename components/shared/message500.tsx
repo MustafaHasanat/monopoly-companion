@@ -1,3 +1,4 @@
+
 interface Props {}
 
 const Message500Page = () => {

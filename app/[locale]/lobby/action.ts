@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { GameType } from "@/utils/types";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 export async function createNewGame({
     template,
@@ -11,9 +13,11 @@ export async function createNewGame({
 }) {
     const supabase = createClient();
 
-    const codeResponse = await supabase.rpc("generate_unique_game_code");
+    const codeResponse: PostgrestSingleResponse<string> = await supabase.rpc(
+        "generate_unique_game_code"
+    );
 
-    const response = await supabase
+    const response: PostgrestSingleResponse<GameType[]> = await supabase
         .from("game")
         .insert({
             code: codeResponse.data,
@@ -23,12 +27,4 @@ export async function createNewGame({
         .select();
 
     return { response, codeResponse };
-}
-
-export async function getGameByCode({ code }: { code: string }) {
-    const supabase = createClient();
-
-    const response = await supabase.from("game").select().eq("code", code);
-
-    return response;
 }

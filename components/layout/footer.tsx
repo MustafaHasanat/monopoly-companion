@@ -1,21 +1,19 @@
 "use client";
 
 import useLocale from "@/hooks/useLocale";
+import { SOCIAL_ICONS } from "@/utils/constants";
 import {
     Avatar,
-    Box,
+    Grid,
     IconButton,
     Link,
-    Stack,
     SxProps,
     Typography,
     useTheme,
 } from "@mui/material";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { ReactNode } from "react";
-import GitHubIcon from "@mui/icons-material/GitHub";
 
-const Footer = ({}) => {
+const Footer = () => {
     const theme = useTheme();
     const { getDictLocales } = useLocale();
     const { footer } = getDictLocales();
@@ -32,83 +30,28 @@ const Footer = ({}) => {
         },
     };
 
-    const socials: {
-        icon: ReactNode;
-        url: string;
-    }[] = [
-        {
-            icon: (
-                <Avatar
-                    src="/icons/linkedin-logo.png"
-                    variant="rounded"
-                    sx={buttonsStyles}
-                />
-            ),
-            url: "https://www.linkedin.com/in/mustafa-alhasanat",
-        },
-        {
-            icon: (
-                <Avatar
-                    src="/icons/github-logo.png"
-                    variant="rounded"
-                    sx={buttonsStyles}
-                />
-            ),
-            url: "https://github.com/MustafaHasanat",
-        },
-        {
-            icon: (
-                <Avatar
-                    src="/icons/npm-logo.png"
-                    variant="rounded"
-                    sx={buttonsStyles}
-                />
-            ),
-            url: "https://www.npmjs.com/~mustafa-alhasanat",
-        },
-        {
-            icon: (
-                <Avatar
-                    src="/icons/udemy-logo.png"
-                    variant="rounded"
-                    sx={buttonsStyles}
-                />
-            ),
-            url: "https://www.udemy.com/user/mustfa-alhasana",
-        },
-        {
-            icon: (
-                <Avatar
-                    src="/icons/calendly-logo.png"
-                    variant="rounded"
-                    sx={buttonsStyles}
-                />
-            ),
-            url: "https://calendly.com/mustafa-hasanat/interview",
-        },
-    ];
-
     return (
-        <Stack
+        <Grid
+            container
             component="footer"
+            flexDirection="column"
+            height="fit-content"
+            width="100%"
+            justifyContent="center"
+            alignItems="center"
+            p="30px 0"
+            gap="20px"
             sx={{
                 backgroundColor: theme.palette.primary.dark,
-                height: "fit-content",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                p: "30px 0",
-                gap: "20px",
             }}
         >
-            <Stack
-                direction="row"
+            <Grid
+                container
                 justifyContent="center"
                 alignItems="center"
                 flexWrap="wrap"
             >
-                {socials.map(({ icon, url }, index) => (
+                {SOCIAL_ICONS.map(({ src, url }, index) => (
                     <Link href={url} key={`footer social: ${index}`}>
                         <IconButton
                             sx={{
@@ -116,11 +59,15 @@ const Footer = ({}) => {
                                 aspectRatio: "1",
                             }}
                         >
-                            {icon}
+                            <Avatar
+                                src={src}
+                                variant="rounded"
+                                sx={buttonsStyles}
+                            />
                         </IconButton>
                     </Link>
                 ))}
-            </Stack>
+            </Grid>
             <Typography
                 textTransform="capitalize"
                 width="90%"
@@ -131,7 +78,7 @@ const Footer = ({}) => {
             >
                 &copy; {footer.copyRights}
             </Typography>
-        </Stack>
+        </Grid>
     );
 };
 

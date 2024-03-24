@@ -6,16 +6,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import useLocale from "@/hooks/useLocale";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { SelectBox, TextFieldForm } from "../shared/form";
+import { SelectBox } from "../shared/form";
 import GamepadTwoToneIcon from "@mui/icons-material/GamepadTwoTone";
 import { GameTemplate } from "@/utils/enums";
-import { GAME_CODE, gameTemplateMapping } from "@/utils/constants";
+import { gameTemplateMapping } from "@/utils/constants";
 import { createNewGame } from "@/app/[locale]/lobby/action";
-import { ControlsContext } from "@/utils/context/controls-context";
 import { useRouter } from "next/navigation";
-import { AuthContext } from "@/utils/context/auth-context";
 import { CordsType } from "@/utils/types";
 import { LOBBY_CORDS } from "@/utils/constants/game";
+import { startTheGameProcess } from "@/utils/helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuth } from "@/utils/redux/auth-slice";
+import { controlsSlice } from "@/utils/redux/controls-slice";
 
 const CreateGame = ({
     setCords,
@@ -24,9 +26,12 @@ const CreateGame = ({
 }) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
-    const { setSnackbarState } = useContext(ControlsContext);
-    const { user } = useContext(AuthContext);
+    // const { setSnackbarState } = useContext(ControlsContext);
+    // const { user, setUser } = useContext(AuthContext);
+    // const { setGame } = useContext(GameContext);
     const router = useRouter();
+    const dispatch = useDispatch();
+    const { user } = useSelector(selectAuth);
 
     const {
         control,
@@ -43,21 +48,42 @@ const CreateGame = ({
         });
 
         if (!response.error) {
-            setSnackbarState({
-                message: "Game is created successfully",
-                severity: "success",
+            dispatch(
+                controlsSlice.actions.setSnackbarState({
+                    snackbarState: {
+                        message: "Game is created successfully",
+                        severity: "success",
+                    },
+                })
+            );
+            // setSnackbarState({
+            //     message: "Game is created successfully",
+            //     severity: "success",
+            // });
+            // start the game
+            await startTheGameProcess({
+                code: codeResponse.data || "",
+                user,
+                game: response.data[0],
+                dispatch,
             });
-
-            window.localStorage.setItem(GAME_CODE, codeResponse.data as string);
-
+            // redirect the user
             setTimeout(() => {
                 router.replace("/game");
             }, 1500);
         } else {
-            setSnackbarState({
-                message: response.error.message,
-                severity: "error",
-            });
+            dispatch(
+                controlsSlice.actions.setSnackbarState({
+                    snackbarState: {
+                        message: response.error.message,
+                        severity: "error",
+                    },
+                })
+            );
+            // setSnackbarState({
+            //     message: response.error.message,
+            //     severity: "error",
+            // });
         }
     };
 

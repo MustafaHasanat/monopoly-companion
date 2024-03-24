@@ -1,6 +1,6 @@
 import "@/utils/styles/global.css";
 import type { Metadata } from "next";
-import { Providers } from "../../utils/context/providers";
+import { Providers } from "../../utils/redux/providers";
 import { Locale, i18n } from "@/utils/configs/i18n.config";
 import Script from "next/script";
 import Body from "@/components/layout/body";
@@ -9,6 +9,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import SnackbarWrapper from "../../components/layout/snackbar";
 import { createClient } from "@/utils/supabase/server";
+import ControlsBox from "@/components/game/controlsBox";
 
 export const metadata: Metadata = {
     title: "Monopoly Companion",
@@ -43,6 +44,7 @@ export default async function RootLayout({
                 <Body user={user} session={session}>
                     <Modal />
                     <Header />
+                    <ControlsBox />
                     {children}
                     <Footer />
                     <SnackbarWrapper />

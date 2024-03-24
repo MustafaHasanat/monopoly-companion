@@ -1,7 +1,7 @@
 "use client";
 
 import Main from "@/components/layout/main";
-import LobbyContainer from "@/components/lobby";
+import LobbyContainer from "@/components/lobby/lobbyContainer";
 
 export default function Lobby() {
     return (

@@ -5,90 +5,27 @@ import {
     Avatar,
     Button,
     Link,
-    Stack,
-    SxProps,
     Tooltip,
     Typography,
     useTheme,
 } from "@mui/material";
 import useLocale from "@/hooks/useLocale";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
-import { ReactNode, useContext, useState } from "react";
-import LoginIcon from "@mui/icons-material/Login";
-import LockIcon from "@mui/icons-material/Lock";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import CasinoIcon from "@mui/icons-material/Casino";
-import { AuthContext } from "@/utils/context/auth-context";
-import { logout } from "@/app/[locale]/auth/action";
-import { GAME_CODE, userAvatarMapping } from "@/utils/constants";
+import { userAvatarMapping } from "@/utils/constants";
 import { UserAvatar } from "@/utils/enums";
 import LanguageIcon from "@mui/icons-material/Language";
+import NavItems from "./navItems";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { useSelector } from "react-redux";
+import { selectAuth } from "@/utils/redux/auth-slice";
 
 const Header = () => {
     const theme = useTheme();
-    const router = useRouter();
     const { getDictLocales, toggleLocale } = useLocale();
     const { header } = getDictLocales();
     const [boxIsOpen, setBoxIsOpen] = useState(false);
-    const { session, user } = useContext(AuthContext);
-
-    const buttonsStyles: SxProps = {
-        height: "100%",
-    };
-
-    const buttons: {
-        text: string;
-        onClick: () => void;
-        Icon: ReactNode;
-    }[] = session?.access_token
-        ? [
-              {
-                  text: header.play,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      router.replace("lobby");
-                  },
-                  Icon: <SportsEsportsIcon sx={buttonsStyles} />,
-              },
-              {
-                  text: header.account,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      router.replace("account");
-                  },
-                  Icon: <ManageAccountsIcon sx={buttonsStyles} />,
-              },
-              {
-                  text: header.logout,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      window.localStorage.removeItem(GAME_CODE);
-                      logout();
-                      router.replace("/auth");
-                  },
-                  Icon: <LockIcon sx={buttonsStyles} />,
-              },
-          ]
-        : [
-              {
-                  text: header.login,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      router.replace("auth?active=login");
-                  },
-                  Icon: <LoginIcon sx={buttonsStyles} />,
-              },
-              {
-                  text: header.register,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      router.replace("auth?active=register");
-                  },
-                  Icon: <PersonAddIcon sx={buttonsStyles} />,
-              },
-          ];
+    const { session, user } = useSelector(selectAuth);
 
     return (
         <AppBar
@@ -163,12 +100,7 @@ const Header = () => {
                     width: "auto",
                 }}
             >
-                {session?.access_token ? (
-                    <Avatar
-                        variant="circular"
-                        src={userAvatarMapping()[user?.avatar as UserAvatar]}
-                    />
-                ) : (
+                {/* {session?.access_token && (
                     <ManageAccountsIcon
                         sx={{
                             color: theme.palette.secondary.contrastText,
@@ -176,44 +108,18 @@ const Header = () => {
                             height: "100%",
                         }}
                     />
-                )}
+                )} */}
+                <Avatar
+                    variant="circular"
+                    src={
+                        session?.access_token
+                            ? userAvatarMapping()[user?.avatar as UserAvatar]
+                            : "/images/avatar-placeholder.png"
+                    }
+                />
             </Button>
 
-            <Stack
-                sx={{
-                    transition: "height 0.3s ease",
-                    position: "absolute",
-                    width: "200px",
-                    height: boxIsOpen ? `${buttons.length * 60}px` : "0px",
-                    right: { mobile: "10px", laptop: "40px" },
-                    top: { mobile: "100px", laptop: "100px" },
-                    overflow: "hidden",
-                    gap: "10px",
-                }}
-            >
-                {buttons.map(({ text, onClick, Icon }, index) => (
-                    <Button
-                        key={`header button: ${index}`}
-                        onClick={onClick}
-                        startIcon={Icon}
-                        variant="outlined"
-                        sx={{
-                            color: theme.palette.secondary.contrastText,
-                            height: { mobile: "60px", laptop: "60px" },
-                            fontSize: { mobile: "20px", laptop: "20px" },
-                            backgroundColor: theme.palette.primary.main,
-                            border: `1px solid ${theme.palette.secondary.contrastText}`,
-
-                            ":hover": {
-                                backgroundColor: theme.palette.secondary.main,
-                                border: `1px solid ${theme.palette.secondary.contrastText}`,
-                            },
-                        }}
-                    >
-                        {text}
-                    </Button>
-                ))}
-            </Stack>
+            <NavItems setBoxIsOpen={setBoxIsOpen} boxIsOpen={boxIsOpen} />
         </AppBar>
     );
 };

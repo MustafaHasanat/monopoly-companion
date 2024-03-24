@@ -5,20 +5,24 @@ import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import useLocale from "@/hooks/useLocale";
 import { useRouter } from "next/navigation";
 import { ControlsContext } from "@/utils/context/controls-context";
-import { CordsType, GameType } from "@/utils/types";
+import { CordsType } from "@/utils/types";
 import { LOBBY_CORDS } from "@/utils/constants/game";
 import { AuthContext } from "@/utils/context/auth-context";
+import { GameContext } from "@/utils/context/game-context";
+import { selectGame } from "@/utils/redux/game-slice";
+import { selectAuth } from "@/utils/redux/auth-slice";
+import { useSelector } from "react-redux";
 
 interface Props {
-    game: GameType | null;
     setCords: Dispatch<SetStateAction<CordsType>>;
 }
-const WaitingGame = ({ setCords, game }: Props) => {
+const WaitingGame = ({ setCords }: Props) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
-    const router = useRouter();
-    const { setSnackbarState } = useContext(ControlsContext);
-    const { user } = useContext(AuthContext);
+    // const { user } = useContext(AuthContext);
+    // const { game } = useContext(GameContext);
+    const { user } = useSelector(selectAuth);
+    const { game } = useSelector(selectGame);
 
     useEffect(() => {
         // TODO: needs web-socket

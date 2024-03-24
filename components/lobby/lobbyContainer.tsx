@@ -12,7 +12,6 @@ const LobbyContainer = () => {
         x: 0,
         y: 1,
     });
-    const [game, setGame] = useState<GameType | null>(null)
 
     return (
         <Container
@@ -37,11 +36,11 @@ const LobbyContainer = () => {
             <LobbyWindow cords={{ x: 0, y: 1 }}>
                 <StartGame setCords={setCords} />
             </LobbyWindow>
-            <LobbyWindow cords={{ x: 0, y: 2 }} >
-                <JoinGame setCords={setCords} setGame={setGame} />
+            <LobbyWindow cords={{ x: 0, y: 2 }}>
+                <JoinGame setCords={setCords} />
             </LobbyWindow>
             <LobbyWindow cords={{ x: 1, y: 2 }}>
-                <WaitingGame setCords={setCords} game={game} />
+                <WaitingGame setCords={setCords} />
             </LobbyWindow>
         </Container>
     );

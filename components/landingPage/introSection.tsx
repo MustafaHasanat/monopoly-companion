@@ -7,12 +7,15 @@ import AnimatedBoard from "./animatedBoard";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { AuthContext } from "@/utils/context/auth-context";
+import { useSelector } from "react-redux";
+import { selectAuth } from "@/utils/redux/auth-slice";
 
 const IntroSection = () => {
     const { getDictLocales } = useLocale();
     const { landingPage } = getDictLocales();
     const router = useRouter();
-    const { session } = useContext(AuthContext);
+    // const { session } = useContext(AuthContext);
+    const { session } = useSelector(selectAuth);
 
     return (
         <Container

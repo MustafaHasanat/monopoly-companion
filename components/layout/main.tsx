@@ -1,29 +1,28 @@
 "use client";
 
-import { Container, SxProps, useTheme } from "@mui/material";
+import { Grid, SxProps, useTheme } from "@mui/material";
 import { ReactNode } from "react";
-import Background from "./bg";
 
 const Main = ({ children, sx }: { children: ReactNode; sx?: SxProps }) => {
     const theme = useTheme();
 
     return (
-        <Container
+        <Grid
+            container
             component="main"
+            flexDirection="column"
+            justifyContent="start"
+            alignItems="center"
+            width="100%"
+            minHeight={{ mobile: "100vh", laptop: "70vh" }}
             sx={{
-                display: "flex",
                 position: "relative",
-                flexDirection: "column",
-                justifyContent: "start",
-                alignItems: "center",
-                width: "100%",
-                minHeight: { mobile: "100vh", laptop: "70vh" },
                 backgroundColor: theme.palette.secondary.main,
                 ...sx,
             }}
         >
             {children}
-        </Container>
+        </Grid>
     );
 };
 

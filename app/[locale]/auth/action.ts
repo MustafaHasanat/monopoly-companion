@@ -54,3 +54,15 @@ export async function logout() {
 
     return response;
 }
+
+export async function changeUserStatus({ status }: { status: UserStatus }) {
+    const supabase = createClient();
+
+    const response = await supabase.auth.updateUser({
+        data: {
+            status,
+        },
+    });
+
+    return response;
+}

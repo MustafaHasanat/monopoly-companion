@@ -1,6 +1,15 @@
-import { CordsType } from "../types";
+import { GameTemplate } from "../enums";
+import { CordsType, GameType } from "../types";
 
 export const GAME_CODE = "game_code";
+
+export const INITIAL_GAME_DATA: GameType = {
+    id: "",
+    created_at: "",
+    banker_id: "",
+    code: "",
+    template: GameTemplate.CLASSIC,
+};
 
 export const gameTemplateMapping = () => ({
     CLASSIC: "classic",
@@ -18,3 +27,12 @@ export const LOBBY_CORDS: {
     join: { x: 0, y: 2 },
     waiting: { x: 1, y: 2 },
 };
+
+export const CONTROLS_ICONS = [
+    { path: "/", isBankerOnly: false },
+    { path: "/send", isBankerOnly: false },
+    { path: "/request", isBankerOnly: false },
+    { path: "/requests", isBankerOnly: true },
+    { path: "/history", isBankerOnly: false },
+    { path: "/manage", isBankerOnly: true },
+];

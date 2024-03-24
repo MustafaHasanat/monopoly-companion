@@ -35,6 +35,31 @@ const nextConfig = {
                 permanent: false,
             },
             {
+                source: "/game/send",
+                destination: "/en/game/send",
+                permanent: false,
+            },
+            {
+                source: "/game/request",
+                destination: "/en/game/request",
+                permanent: false,
+            },
+            {
+                source: "/game/requests",
+                destination: "/en/game/requests",
+                permanent: false,
+            },
+            {
+                source: "/game/history",
+                destination: "/en/game/history",
+                permanent: false,
+            },
+            {
+                source: "/game/manage",
+                destination: "/en/game/manage",
+                permanent: false,
+            },
+            {
                 source: "/error",
                 destination: "/en/error",
                 permanent: false,

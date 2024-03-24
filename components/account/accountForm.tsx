@@ -1,29 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schemas/account";
-import { AuthContext } from "@/utils/context/auth-context";
 import { updateProfile } from "@/app/[locale]/account/action";
-import { Avatar, Container, Grid, OutlinedInput } from "@mui/material";
+import { Avatar, Grid } from "@mui/material";
 import { SelectBox, TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
 import { UserAvatar } from "@/utils/enums";
 import { userAvatarMapping } from "@/utils/constants";
 import { ContainedButton } from "../shared/button";
-import { ControlsContext } from "@/utils/context/controls-context";
 import { useRouter } from "next/navigation";
 import LoadingPage from "../shared/loading";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuth } from "@/utils/redux/auth-slice";
+import { controlsSlice } from "@/utils/redux/controls-slice";
 
 const AccountForm = () => {
-    const [dialogIsOpen, setDialogIsOpen] = useState(false);
-    const { user, session } = useContext(AuthContext);
-    const { setSnackbarState } = useContext(ControlsContext);
     const { getDictLocales } = useLocale();
     const { auth, global } = getDictLocales();
     const router = useRouter();
+    const { user, session } = useSelector(selectAuth);
+    const dispatch = useDispatch();
+    // const { user, session } = useContext(AuthContext);
+    // const { setSnackbarState } = useContext(ControlsContext);
 
     if (!session?.access_token) {
         setTimeout(() => {
@@ -61,16 +63,32 @@ const AccountForm = () => {
     }) => {
         const response = await updateProfile(formData)
             .then((data) => {
-                setSnackbarState({
-                    message: "Profile updated successfully",
-                    severity: "success",
-                });
+                dispatch(
+                    controlsSlice.actions.setSnackbarState({
+                        snackbarState: {
+                            message: "Profile updated successfully",
+                            severity: "success",
+                        },
+                    })
+                );
+                // setSnackbarState({
+                //     message: "Profile updated successfully",
+                //     severity: "success",
+                // });
             })
             .catch((error) => {
-                setSnackbarState({
-                    message: "Error occurred",
-                    severity: "error",
-                });
+                dispatch(
+                    controlsSlice.actions.setSnackbarState({
+                        snackbarState: {
+                            message: "Error occurred",
+                            severity: "error",
+                        },
+                    })
+                );
+                // setSnackbarState({
+                //     message: "Error occurred",
+                //     severity: "error",
+                // });
             });
 
         console.log(response);
