@@ -1,7 +1,12 @@
 "use client";
 
+import SendWindow from "@/components/game/sendWindow";
 import Main from "@/components/layout/main";
 
 export default function Send() {
-    return <Main>send credit</Main>;
+    return (
+        <Main>
+            <SendWindow />
+        </Main>
+    );
 }

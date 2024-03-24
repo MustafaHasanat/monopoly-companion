@@ -1,7 +1,6 @@
 import "@/utils/styles/global.css";
 import type { Metadata } from "next";
 import { Providers } from "../../utils/redux/providers";
-import { Locale, i18n } from "@/utils/configs/i18n.config";
 import Script from "next/script";
 import Body from "@/components/layout/body";
 import Modal from "@/components/layout/modal";
@@ -10,6 +9,7 @@ import Footer from "@/components/layout/footer";
 import SnackbarWrapper from "../../components/layout/snackbar";
 import { createClient } from "@/utils/supabase/server";
 import ControlsBox from "@/components/game/controlsBox";
+import { Locale, i18n } from "@/utils/locales/i18n.config";
 
 export const metadata: Metadata = {
     title: "Monopoly Companion",

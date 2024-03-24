@@ -1,7 +1,12 @@
 "use client";
 
+import HistoryWindow from "@/components/game/historyWindow";
 import Main from "@/components/layout/main";
 
 export default function History() {
-    return <Main>history page</Main>;
+    return (
+        <Main>
+            <HistoryWindow />
+        </Main>
+    );
 }

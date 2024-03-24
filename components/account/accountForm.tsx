@@ -1,37 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schemas/account";
 import { updateProfile } from "@/app/[locale]/account/action";
-import { Avatar, Grid } from "@mui/material";
+import { Avatar, Grid, MenuItem, Typography } from "@mui/material";
 import { SelectBox, TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
 import { UserAvatar } from "@/utils/enums";
-import { userAvatarMapping } from "@/utils/constants";
+import { AVATAR_PLACEHOLDER, userAvatarMapping } from "@/utils/constants";
 import { ContainedButton } from "../shared/button";
-import { useRouter } from "next/navigation";
-import LoadingPage from "../shared/loading";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { controlsSlice } from "@/utils/redux/controls-slice";
+import useAuthGuard from "@/hooks/useAuthGuard";
 
 const AccountForm = () => {
     const { getDictLocales } = useLocale();
-    const { auth, global } = getDictLocales();
-    const router = useRouter();
-    const { user, session } = useSelector(selectAuth);
+    const { auth } = getDictLocales();
+    const { user } = useSelector(selectAuth);
     const dispatch = useDispatch();
-    // const { user, session } = useContext(AuthContext);
-    // const { setSnackbarState } = useContext(ControlsContext);
-
-    if (!session?.access_token) {
-        setTimeout(() => {
-            router.replace("/auth?active=login");
-        }, 2000);
-    }
+    const { isAccessible, loadingComponent } = useAuthGuard();
+    const [avatarURL, setAvatarURL] = useState(AVATAR_PLACEHOLDER);
+    const [avatarPreviewURL, setAvatarPreviewURL] =
+        useState(AVATAR_PLACEHOLDER);
 
     const {
         control,
@@ -42,9 +36,9 @@ const AccountForm = () => {
     } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            username: user.username,
-            email: user.email,
-            avatar: user.avatar,
+            username: "",
+            email: "",
+            avatar: AVATAR_PLACEHOLDER,
         },
     });
 
@@ -53,6 +47,7 @@ const AccountForm = () => {
             setValue("username", user.username);
             setValue("email", user.email);
             setValue("avatar", user.avatar);
+            setAvatarURL(userAvatarMapping()[watch("avatar") as UserAvatar]);
         }
     }, [user]);
 
@@ -61,7 +56,7 @@ const AccountForm = () => {
         username: string;
         avatar: string;
     }) => {
-        const response = await updateProfile(formData)
+        await updateProfile(formData)
             .then((data) => {
                 dispatch(
                     controlsSlice.actions.setSnackbarState({
@@ -71,10 +66,6 @@ const AccountForm = () => {
                         },
                     })
                 );
-                // setSnackbarState({
-                //     message: "Profile updated successfully",
-                //     severity: "success",
-                // });
             })
             .catch((error) => {
                 dispatch(
@@ -85,17 +76,11 @@ const AccountForm = () => {
                         },
                     })
                 );
-                // setSnackbarState({
-                //     message: "Error occurred",
-                //     severity: "error",
-                // });
             });
-
-        console.log(response);
     };
 
-    return !session?.access_token ? (
-        <LoadingPage phrase={global.redirecting} />
+    return isAccessible ? (
+        loadingComponent
     ) : (
         <Grid
             container
@@ -116,7 +101,7 @@ const AccountForm = () => {
         >
             <Grid container item mobile={2}>
                 <Avatar
-                    src={userAvatarMapping()[watch("avatar") as UserAvatar]}
+                    src={avatarURL}
                     alt="avatar"
                     sx={{
                         width: "100px",
@@ -126,21 +111,45 @@ const AccountForm = () => {
                 />
             </Grid>
 
-            <Grid container item mobile={7} m="auto" justifyContent="center">
-                <Controller
-                    name="avatar"
-                    control={control}
-                    render={({ field }) => (
-                        <SelectBox
-                            {...field}
-                            initialValue={user?.avatar || UserAvatar.M1}
-                            label={auth.avatar}
-                            values={Object.keys(UserAvatar)}
-                            labels={Object.values(userAvatarMapping(true))}
-                            error={!!errors.avatar}
-                        />
-                    )}
-                />
+            <Grid
+                container
+                item
+                mobile={7}
+                m="auto"
+                justifyContent="center"
+                rowGap={3}
+            >
+                <Grid item mobile={12} m="auto">
+                    <Controller
+                        name="avatar"
+                        control={control}
+                        render={({ field }) => (
+                            <SelectBox
+                                {...field}
+                                initialValue={UserAvatar.M1}
+                                defaultValue={UserAvatar.M1}
+                                label={auth.avatar}
+                                values={Object.keys(UserAvatar)}
+                                labels={Object.values(userAvatarMapping(true))}
+                                error={!!errors.avatar}
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid item mobile={5} m="auto">
+                    <Typography>{auth.preview}</Typography>
+                </Grid>
+                <Grid item mobile={5} m="auto">
+                    <Avatar
+                        src={userAvatarMapping()[watch("avatar") as UserAvatar]}
+                        alt="avatar"
+                        sx={{
+                            width: "50px",
+                            height: "auto",
+                            m: "auto",
+                        }}
+                    />
+                </Grid>
             </Grid>
 
             <Grid item mobile={12}>

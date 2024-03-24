@@ -1,13 +1,10 @@
 "use client";
 
-import { ControlsContext } from "@/utils/context/controls-context";
 import { controlsSlice, selectControls } from "@/utils/redux/controls-slice";
 import { Alert, AlertColor, Slide, SlideProps, Snackbar } from "@mui/material";
-import { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const SnackbarWrapper = () => {
-    // const { snackbarState, setSnackbarState } = useContext(ControlsContext);
     const dispatch = useDispatch();
     const { snackbarState } = useSelector(selectControls);
 
@@ -24,7 +21,6 @@ const SnackbarWrapper = () => {
                 },
             })
         );
-        // setSnackbarState({ message: "none", severity: "success" });
     };
 
     return (

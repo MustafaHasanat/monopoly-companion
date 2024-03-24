@@ -1,12 +1,15 @@
 "use client";
 
-import { AuthContext } from "@/utils/context/auth-context";
 import { Button, Stack, SxProps, useTheme } from "@mui/material";
-import { Dispatch, ReactNode, SetStateAction, useContext } from "react";
-import { endTheGame, getGameByCode } from "@/app/[locale]/game/action";
-import { changeUserStatus, logout } from "@/app/[locale]/auth/action";
-import { GAME_CODE } from "@/utils/constants";
-import { UserStatus } from "@/utils/enums";
+import {
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useEffect,
+    useState,
+} from "react";
+import { logout } from "@/app/[locale]/auth/action";
+import { GAME_CODE, getNavItems } from "@/utils/constants";
 import LoginIcon from "@mui/icons-material/Login";
 import LockIcon from "@mui/icons-material/Lock";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -15,7 +18,6 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useRouter } from "next/navigation";
 import useLocale from "@/hooks/useLocale";
 import { endTheGameProcess } from "@/utils/helpers";
-import { GameContext } from "@/utils/context/game-context";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
@@ -31,20 +33,35 @@ interface Props {
     setBoxIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
+const buttonsStyles: SxProps = {
+    height: "100%",
+};
+
+const navItemsIconsMapping: { [key: string]: ReactNode } = {
+    lobby: <SportsEsportsIcon sx={buttonsStyles} />,
+    account: <ManageAccountsIcon sx={buttonsStyles} />,
+    logout: <LockIcon sx={buttonsStyles} />,
+    "auth?active=login": <LoginIcon sx={buttonsStyles} />,
+    "auth?active=register": <PersonAddIcon sx={buttonsStyles} />,
+};
+
 const NavItems = ({ boxIsOpen, setBoxIsOpen }: Props) => {
     const theme = useTheme();
-    // const { session, user, setUser } = useContext(AuthContext);
-    // const { setGame, game } = useContext(GameContext);
     const router = useRouter();
     const { getDictLocales } = useLocale();
     const { header } = getDictLocales();
     const dispatch = useDispatch();
     const { session, user } = useSelector(selectAuth);
     const { game } = useSelector(selectGame);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const buttonsStyles: SxProps = {
-        height: "100%",
-    };
+    useEffect(() => {
+        if (session?.access_token) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, [session?.access_token]);
 
     const handleLogout = async () => {
         setBoxIsOpen(false);
@@ -62,81 +79,62 @@ const NavItems = ({ boxIsOpen, setBoxIsOpen }: Props) => {
         }
         // log out the user and redirect them
         logout();
-        router.replace("/auth");
+        router.replace("/auth?active=login");
     };
 
-    const navButtons: NavButtonType[] = session?.access_token
-        ? [
-              {
-                  text: header.play,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      router.replace("lobby");
-                  },
-                  Icon: <SportsEsportsIcon sx={buttonsStyles} />,
-              },
-              {
-                  text: header.account,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      router.replace("account");
-                  },
-                  Icon: <ManageAccountsIcon sx={buttonsStyles} />,
-              },
-              {
-                  text: header.logout,
-                  onClick: handleLogout,
-                  Icon: <LockIcon sx={buttonsStyles} />,
-              },
-          ]
-        : [
-              {
-                  text: header.login,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      router.replace("auth?active=login");
-                  },
-                  Icon: <LoginIcon sx={buttonsStyles} />,
-              },
-              {
-                  text: header.register,
-                  onClick: () => {
-                      setBoxIsOpen(false);
-                      router.replace("auth?active=register");
-                  },
-                  Icon: <PersonAddIcon sx={buttonsStyles} />,
-              },
-          ];
+    const handleNavItemClick = async (name: string) => {
+        setBoxIsOpen(false);
+
+        if (!["logout"].includes(name)) {
+            router.replace(name);
+        } else {
+            await handleLogout();
+        }
+    };
+
+    const navItems = getNavItems({
+        header,
+        isLoggedIn,
+    });
 
     return (
         <Stack
             sx={{
-                transition: "height 0.3s ease",
+                display: "grid",
+                gridTemplateRows: boxIsOpen
+                    ? `repeat(${navItems.length}, 1fr)`
+                    : `repeat(${navItems.length}, 0fr)`,
+                transition: "0.3s ease",
                 position: "absolute",
                 width: "200px",
-                height: boxIsOpen ? `${navButtons.length * 60}px` : "0px",
                 right: { mobile: "10px", laptop: "40px" },
                 top: { mobile: "100px", laptop: "100px" },
                 overflow: "hidden",
-                gap: "10px",
+                gap: boxIsOpen ? "10px" : 0,
             }}
         >
-            {navButtons.map(({ text, onClick, Icon }, index) => (
+            {navItems.map(({ category, name, text }, index) => (
                 <Button
                     key={`header button: ${index}`}
-                    onClick={onClick}
-                    startIcon={Icon}
+                    onClick={async () => await handleNavItemClick(name)}
+                    startIcon={navItemsIconsMapping[name as string]}
                     variant="outlined"
                     sx={{
+                        transition: "0.3s ease",
+                        py: boxIsOpen ? "5px" : 0,
                         color: theme.palette.secondary.contrastText,
-                        height: { mobile: "60px", laptop: "60px" },
                         fontSize: { mobile: "20px", laptop: "20px" },
                         backgroundColor: theme.palette.primary.main,
-                        border: `1px solid ${theme.palette.secondary.contrastText}`,
+                        border: boxIsOpen
+                            ? `1px solid ${theme.palette.secondary.contrastText}`
+                            : "none",
+                        overflow: "hidden",
 
                         ":hover": {
                             backgroundColor: theme.palette.secondary.main,
-                            border: `1px solid ${theme.palette.secondary.contrastText}`,
+                            border: boxIsOpen
+                                ? `1px solid ${theme.palette.secondary.contrastText}`
+                                : "none",
                         },
                     }}
                 >

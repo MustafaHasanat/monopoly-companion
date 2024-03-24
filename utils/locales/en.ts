@@ -1,7 +1,7 @@
 const en = {
     global: {
         loading: "Loading ..",
-        redirecting: "Wrong entrance, you're being redirected ..",
+        redirecting: "You're being redirected ..",
     },
     header: {
         brandName: "Monopoly Companion",
@@ -30,6 +30,7 @@ const en = {
         newPassword: "New Password",
         confirm: "Confirm Password",
         avatar: "avatar",
+        preview: "Preview",
         save: "Save",
         savePass: "Save password",
     },

@@ -8,10 +8,8 @@ import RequestPageRoundedIcon from "@mui/icons-material/RequestPageRounded";
 import ScheduleRoundedIcon from "@mui/icons-material/ScheduleRounded";
 import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
 import PointOfSaleRoundedIcon from "@mui/icons-material/PointOfSaleRounded";
-import { ReactNode, useContext } from "react";
-import { AuthContext } from "@/utils/context/auth-context";
+import { ReactNode } from "react";
 import { CONTROLS_ICONS } from "@/utils/constants";
-import { GameContext } from "@/utils/context/game-context";
 import ControlButton from "./controlButton";
 import { useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
@@ -22,8 +20,6 @@ const ControlsBox = () => {
     const theme = useTheme();
     const { user } = useSelector(selectAuth);
     const { game: gameObj } = useSelector(selectGame);
-    // const { user } = useContext(AuthContext);
-    // const { game: gameObj } = useContext(GameContext);
 
     const isBankerPlayer = user.id === gameObj.banker_id;
 

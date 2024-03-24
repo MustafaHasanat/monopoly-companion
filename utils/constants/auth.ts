@@ -12,6 +12,8 @@ export const INITIAL_PLAYER_DATA: Player = {
     game_id: "",
 };
 
+export const AVATAR_PLACEHOLDER = "/images/avatar-placeholder.png"
+
 export const userAvatarMapping = (isSelect = false) => ({
     M1: isSelect ? "Man 1" : "/images/M1.jpg",
     M2: isSelect ? "Man 2" : "/images/M2.jpg",

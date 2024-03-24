@@ -1,7 +1,12 @@
 "use client";
 
+import RequestsWindow from "@/components/game/requestsWindow";
 import Main from "@/components/layout/main";
 
 export default function Requests() {
-    return <Main>banker requests</Main>;
+    return (
+        <Main>
+            <RequestsWindow />
+        </Main>
+    );
 }

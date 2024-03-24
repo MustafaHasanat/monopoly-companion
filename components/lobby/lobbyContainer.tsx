@@ -3,17 +3,22 @@ import JoinGame from "@/components/lobby/joinGame";
 import LobbyWindow from "@/components/lobby/lobbyWindow";
 import StartGame from "@/components/lobby/startGame";
 import WaitingGame from "@/components/lobby/waitingGame";
-import { CordsType, GameType } from "@/utils/types";
+import useAuthGuard from "@/hooks/useAuthGuard";
+import { CordsType } from "@/utils/types";
 import { Container } from "@mui/material";
 import { useState } from "react";
 
 const LobbyContainer = () => {
+    const { isAccessible, loadingComponent } = useAuthGuard();
+
     const [cords, setCords] = useState<CordsType>({
         x: 0,
         y: 1,
     });
 
-    return (
+    return isAccessible ? (
+        loadingComponent
+    ) : (
         <Container
             sx={{
                 position: "relative",

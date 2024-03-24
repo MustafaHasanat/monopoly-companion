@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export const FRONTEND_URL = process.env.FRONTEND_URL;
 
 export const SOCIAL_ICONS = [
@@ -22,3 +24,47 @@ export const SOCIAL_ICONS = [
         url: "https://calendly.com/mustafa-hasanat/interview",
     },
 ];
+
+export const PRIVATE_PATHS = ["lobby", "game", "account"];
+
+export const getNavItems = ({
+    header,
+    isLoggedIn,
+}: {
+    header: { [key: string]: string };
+    isLoggedIn: boolean;
+}): {
+    text: string;
+    name: string;
+    category: "logged" | "unLogged" | "both";
+}[] =>
+    isLoggedIn
+        ? [
+              {
+                  text: header.play,
+                  name: "lobby",
+                  category: "logged",
+              },
+              {
+                  text: header.account,
+                  name: "account",
+                  category: "logged",
+              },
+              {
+                  text: header.logout,
+                  name: "logout",
+                  category: "logged",
+              },
+          ]
+        : [
+              {
+                  text: header.login,
+                  name: "auth?active=login",
+                  category: "unLogged",
+              },
+              {
+                  text: header.register,
+                  name: "auth?active=register",
+                  category: "unLogged",
+              },
+          ];

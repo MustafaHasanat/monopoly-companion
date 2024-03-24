@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@mui/material";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { ContainedButton } from "../shared/button";
 import createSchema from "./schemas/createGame";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,9 +26,6 @@ const CreateGame = ({
 }) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
-    // const { setSnackbarState } = useContext(ControlsContext);
-    // const { user, setUser } = useContext(AuthContext);
-    // const { setGame } = useContext(GameContext);
     const router = useRouter();
     const dispatch = useDispatch();
     const { user } = useSelector(selectAuth);
@@ -56,10 +53,6 @@ const CreateGame = ({
                     },
                 })
             );
-            // setSnackbarState({
-            //     message: "Game is created successfully",
-            //     severity: "success",
-            // });
             // start the game
             await startTheGameProcess({
                 code: codeResponse.data || "",
@@ -80,10 +73,6 @@ const CreateGame = ({
                     },
                 })
             );
-            // setSnackbarState({
-            //     message: response.error.message,
-            //     severity: "error",
-            // });
         }
     };
 
@@ -118,8 +107,9 @@ const CreateGame = ({
                         <SelectBox
                             {...field}
                             initialValue={GameTemplate.CLASSIC}
+                            defaultValue={GameTemplate.CLASSIC}
                             label={lobby.create.template}
-                            values={Object.keys(GameTemplate)}
+                            values={Object.values(GameTemplate)}
                             labels={Object.values(gameTemplateMapping())}
                             helperText={errors.template?.message}
                             error={!!errors.template}

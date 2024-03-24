@@ -10,13 +10,12 @@ import {
     useTheme,
 } from "@mui/material";
 import useLocale from "@/hooks/useLocale";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CasinoIcon from "@mui/icons-material/Casino";
 import { userAvatarMapping } from "@/utils/constants";
 import { UserAvatar } from "@/utils/enums";
 import LanguageIcon from "@mui/icons-material/Language";
 import NavItems from "./navItems";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
 
@@ -26,6 +25,14 @@ const Header = () => {
     const { header } = getDictLocales();
     const [boxIsOpen, setBoxIsOpen] = useState(false);
     const { session, user } = useSelector(selectAuth);
+    const [avatarImage, setAvatarImage] = useState(
+        "/images/avatar-placeholder.png"
+    );
+
+    useEffect(() => {
+        if (session?.access_token)
+            setAvatarImage(userAvatarMapping()[user?.avatar as UserAvatar]);
+    }, [session?.access_token, user?.avatar]);
 
     return (
         <AppBar
@@ -100,23 +107,7 @@ const Header = () => {
                     width: "auto",
                 }}
             >
-                {/* {session?.access_token && (
-                    <ManageAccountsIcon
-                        sx={{
-                            color: theme.palette.secondary.contrastText,
-                            width: "100%",
-                            height: "100%",
-                        }}
-                    />
-                )} */}
-                <Avatar
-                    variant="circular"
-                    src={
-                        session?.access_token
-                            ? userAvatarMapping()[user?.avatar as UserAvatar]
-                            : "/images/avatar-placeholder.png"
-                    }
-                />
+                <Avatar variant="circular" src={avatarImage} />
             </Button>
 
             <NavItems setBoxIsOpen={setBoxIsOpen} boxIsOpen={boxIsOpen} />

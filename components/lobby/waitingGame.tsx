@@ -1,14 +1,10 @@
 import { CircularProgress, Grid, Typography } from "@mui/material";
-import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ContainedButton } from "../shared/button";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import useLocale from "@/hooks/useLocale";
-import { useRouter } from "next/navigation";
-import { ControlsContext } from "@/utils/context/controls-context";
 import { CordsType } from "@/utils/types";
 import { LOBBY_CORDS } from "@/utils/constants/game";
-import { AuthContext } from "@/utils/context/auth-context";
-import { GameContext } from "@/utils/context/game-context";
 import { selectGame } from "@/utils/redux/game-slice";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { useSelector } from "react-redux";
@@ -19,10 +15,11 @@ interface Props {
 const WaitingGame = ({ setCords }: Props) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
-    // const { user } = useContext(AuthContext);
-    // const { game } = useContext(GameContext);
     const { user } = useSelector(selectAuth);
     const { game } = useSelector(selectGame);
+
+    const [host, setHost] = useState("--------");
+    const [gameCode, setGameCode] = useState("--------");
 
     useEffect(() => {
         // TODO: needs web-socket
@@ -30,6 +27,9 @@ const WaitingGame = ({ setCords }: Props) => {
         //     GAME_CODE,
         //     response?.data[0] as string
         // );
+
+        if (user) setHost(user.username);
+        if (game) setGameCode(game.code);
     }, [game, user]);
 
     return (
@@ -70,7 +70,7 @@ const WaitingGame = ({ setCords }: Props) => {
                     width="80%"
                     textAlign="left"
                 >
-                    <span>{game?.code || "-------"}</span>
+                    <span>{gameCode}</span>
                 </Typography>
             </Grid>
 
@@ -92,7 +92,7 @@ const WaitingGame = ({ setCords }: Props) => {
                     width="80%"
                     textAlign="left"
                 >
-                    <span>{user?.username || "-------"}</span>
+                    <span>{host}</span>
                 </Typography>
             </Grid>
 

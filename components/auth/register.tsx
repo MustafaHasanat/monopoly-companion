@@ -7,8 +7,6 @@ import useLocale from "@/hooks/useLocale";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import registerSchema from "./schemas/register";
-import { ControlsContext } from "@/utils/context/controls-context";
-import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { login, register } from "@/app/[locale]/auth/action";
 import { useDispatch } from "react-redux";
@@ -17,7 +15,6 @@ import { controlsSlice } from "@/utils/redux/controls-slice";
 const Register = () => {
     const { getDictLocales } = useLocale();
     const { auth } = getDictLocales();
-    // const { setSnackbarState } = useContext(ControlsContext);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -51,11 +48,6 @@ const Register = () => {
                     },
                 })
             );
-            // setSnackbarState({
-            //     message: "User is created, logging you in ..",
-            //     severity: "success",
-            // });
-
             const loginResponse = await login(formData);
 
             if (!loginResponse.error) {
@@ -67,11 +59,6 @@ const Register = () => {
                         },
                     })
                 );
-                // setSnackbarState({
-                //     message: "Logged in successfully",
-                //     severity: "success",
-                // });
-
                 setTimeout(() => {
                     router.replace("/lobby");
                 }, 1500);
@@ -84,10 +71,6 @@ const Register = () => {
                         },
                     })
                 );
-                // setSnackbarState({
-                //     message: loginResponse.error.message,
-                //     severity: "error",
-                // });
             }
         } else {
             dispatch(
@@ -98,10 +81,6 @@ const Register = () => {
                     },
                 })
             );
-            // setSnackbarState({
-            //     message: response.error.message,
-            //     severity: "error",
-            // });
         }
     };
 

@@ -3,13 +3,12 @@
 
 import useLocale from "@/hooks/useLocale";
 import { GAME_CODE } from "@/utils/constants";
-import { AuthContext } from "@/utils/context/auth-context";
 import { normalizeUser } from "@/utils/helpers";
 import { authSlice } from "@/utils/redux/auth-slice";
 import { Box, Grid } from "@mui/material";
 import { Session, User } from "@supabase/supabase-js";
 import { useRouter, usePathname } from "next/navigation";
-import { ReactNode, useContext, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 interface Props {
@@ -21,7 +20,6 @@ interface Props {
 const Body = ({ children, user, session }: Props) => {
     const { getLocale } = useLocale();
     const locale = getLocale();
-    // const { setUser, setSession } = useContext(AuthContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const pathname = usePathname();
@@ -29,8 +27,6 @@ const Body = ({ children, user, session }: Props) => {
     useEffect(() => {
         dispatch(authSlice.actions.setUser({ user: normalizeUser(user) }));
         dispatch(authSlice.actions.setSession({ session }));
-        // setUser(normalizeUser(user));
-        // setSession(session);
     }, [user, session]);
 
     useEffect(() => {

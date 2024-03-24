@@ -5,8 +5,8 @@ const createSchema = yup.object().shape({
     template: yup
         .string()
         .oneOf(
-            Object.keys(GameTemplate),
-            `Template must be one of: ${Object.keys(GameTemplate)}`
+            Object.values(GameTemplate),
+            `Template must be one of: ${Object.values(GameTemplate)}`
         )
         .required("Template is required"),
 });

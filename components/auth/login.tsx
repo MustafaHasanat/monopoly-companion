@@ -7,8 +7,6 @@ import useLocale from "@/hooks/useLocale";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginSchema from "./schemas/login";
-import { ControlsContext } from "@/utils/context/controls-context";
-import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/[locale]/auth/action";
 import { useDispatch } from "react-redux";
@@ -18,7 +16,6 @@ const Login = () => {
     const { getDictLocales } = useLocale();
     const { auth } = getDictLocales();
     const router = useRouter();
-    // const { setSnackbarState } = useContext(ControlsContext);
     const dispatch = useDispatch();
 
     const {
@@ -37,10 +34,6 @@ const Login = () => {
         const response = await login(formData);
 
         if (!response.error) {
-            // setSnackbarState({
-            //     message: "Logged in successfully",
-            //     severity: "success",
-            // });
             dispatch(
                 controlsSlice.actions.setSnackbarState({
                     snackbarState: {
@@ -53,10 +46,6 @@ const Login = () => {
                 router.replace("/lobby");
             }, 1500);
         } else {
-            // setSnackbarState({
-            //     message: response.error.message,
-            //     severity: "error",
-            // });
             dispatch(
                 controlsSlice.actions.setSnackbarState({
                     snackbarState: {
