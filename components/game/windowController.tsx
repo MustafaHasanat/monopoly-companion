@@ -28,11 +28,11 @@ const WindowController = ({ page }: Props) => {
 
     const pagesMapping = {
         main: { component: <MainWindow />, title: game.main.title },
+        send: { component: <SendWindow />, title: game.send.title },
+        request: { component: <RequestWindow />, title: game.request.title },
+        bank: { component: <BankWindow />, title: game.bankRequests.title },
         history: { component: <HistoryWindow />, title: game.history.title },
         manage: { component: <ManageWindow />, title: game.manage.title },
-        bank: { component: <BankWindow />, title: game.bankRequests.title },
-        request: { component: <RequestWindow />, title: game.request.title },
-        send: { component: <SendWindow />, title: game.send.title },
     };
 
     return (
@@ -42,6 +42,11 @@ const WindowController = ({ page }: Props) => {
                     mobile: "20px",
                     tablet: "15%",
                     laptop: "25%",
+                },
+                pb: {
+                    mobile: "30px",
+                    tablet: "30px",
+                    laptop: "50px",
                 },
                 gap: 3,
             }}

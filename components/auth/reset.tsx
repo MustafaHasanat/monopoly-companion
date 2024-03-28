@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 import { TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
 import { ContainedButton } from "../shared/button";
-import { passwordSchema } from "./schemas/reset";
+import { passwordSchema } from "@/utils/schemas";
 
 const PasswordReset = () => {
     const { getDictLocales } = useLocale();

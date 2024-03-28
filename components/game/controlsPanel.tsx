@@ -45,9 +45,9 @@ const ControlsPanel = () => {
             width="100%"
             rowGap={{ mobile: 2, tablet: 2, laptop: 2 }}
             p={{
-                mobile: "50px 10px 20px 10px",
-                tablet: "70px 15% 30px 15%",
-                laptop: "70px 25% 30px 25%",
+                mobile: "30px 10px",
+                tablet: "30px 15%",
+                laptop: "20px 5%",
             }}
             sx={{
                 backgroundColor: theme.palette.secondary.main,

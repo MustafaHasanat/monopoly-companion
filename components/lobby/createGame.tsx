@@ -1,7 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import { ContainedButton } from "../shared/button";
-import createSchema from "./schemas/createGame";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import useLocale from "@/hooks/useLocale";
@@ -18,6 +17,7 @@ import { startTheGameProcess } from "@/utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { controlsSlice } from "@/utils/redux/controls-slice";
+import { createGameSchema } from "@/utils/schemas";
 
 const CreateGame = ({
     setCords,
@@ -35,7 +35,7 @@ const CreateGame = ({
         formState: { errors },
         handleSubmit,
     } = useForm({
-        resolver: yupResolver(createSchema),
+        resolver: yupResolver(createGameSchema),
         defaultValues: {
             template: GameTemplate.CLASSIC,
         },
@@ -58,7 +58,6 @@ const CreateGame = ({
             );
             // start the game
             await startTheGameProcess({
-                code: codeResponse.data || "",
                 user,
                 game: response.data[0],
                 dispatch,

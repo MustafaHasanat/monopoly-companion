@@ -81,6 +81,7 @@ const en = {
         },
         main: {
             title: "Main Page",
+            players: "Current Players",
             credit: "Your credit: ",
             role: "Your role: ",
             code: "Game Code ",

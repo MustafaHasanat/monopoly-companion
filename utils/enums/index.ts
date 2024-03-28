@@ -1,2 +1,2 @@
 export { UserAvatar, UserStatus } from "./auth";
-export { GameTemplate, TransactionReason } from "./game";
+export { GameTemplate, TransactionReason, TransactionStatus } from "./game";

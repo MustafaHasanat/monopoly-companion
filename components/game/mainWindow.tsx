@@ -6,7 +6,17 @@ import useAsyncStates from "@/hooks/useAsyncStates";
 import { AVATAR_PLACEHOLDER, userAvatarMapping } from "@/utils/constants";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
-import { Avatar, Divider, Grid, Typography, useTheme } from "@mui/material";
+import {
+    Avatar,
+    Divider,
+    Grid,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { ContainedButton } from "../shared/button";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
@@ -17,6 +27,8 @@ import { UserStatus } from "@/utils/enums";
 import { controlsSlice } from "@/utils/redux/controls-slice";
 import { endTheGameProcess } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
+import React from "react";
+import PlayerCard from "./playerCard";
 
 const MainWindow = () => {
     const { isAccessible, loadingComponent } = useAuthGuard({ page: "game" });
@@ -31,7 +43,7 @@ const MainWindow = () => {
     const [avatarImg, username, userCredit, userStatus, gameCode] =
         useAsyncStates({
             dependents: [user, gameObj],
-            initialStates: [AVATAR_PLACEHOLDER, ""],
+            initialStates: [AVATAR_PLACEHOLDER, "", 0, UserStatus.GHOST, ""],
             finalStates: [
                 userAvatarMapping()[user.avatar],
                 user.username,
@@ -89,6 +101,7 @@ const MainWindow = () => {
         loadingComponent
     ) : (
         <>
+            {/* player details */}
             <Grid container gap={2}>
                 <Grid container item mobile={4}>
                     <Avatar
@@ -127,32 +140,77 @@ const MainWindow = () => {
                 }}
             />
 
+            {/* current players list */}
+            <Grid container gap={2} justifyContent="center">
+                <Grid container item justifyContent="center">
+                    <Typography variant="h5">{game.main.players}</Typography>
+                </Grid>
+                <List
+                    sx={{
+                        width: "100%",
+                        maxWidth: 360,
+                        bgcolor: "background.paper",
+                    }}
+                >
+                    {[
+                        user,
+                        {
+                            ...user,
+                            status: UserStatus.CITIZEN,
+                        },
+                        {
+                            ...user,
+                            status: UserStatus.CITIZEN,
+                            credit: 1000,
+                        },
+                        {
+                            ...user,
+                            status: UserStatus.CITIZEN,
+                            credit: 1000,
+                        },
+                    ].map((player, index) => (
+                        <React.Fragment key={`player item: ${index}`}>
+                            <PlayerCard player={player} />
+                        </React.Fragment>
+                    ))}
+                </List>
+            </Grid>
+
+            <Divider
+                sx={{
+                    width: "100%",
+                }}
+            />
+
+            {/* game code */}
             <Grid container item>
                 <Typography
                     variant="h6"
                     textAlign="center"
-                    sx={{ opacity: 0.7 }}
+                    sx={{ opacity: 0.7, m: "auto" }}
                 >{`${game.main.code}${gameCode}`}</Typography>
             </Grid>
 
+            {/* copy button */}
             <Grid container item justifyContent="center">
                 <ContainedButton
                     startIcon={<ContentCopyRoundedIcon />}
                     onClick={handleCopyButton}
                     sx={{
-                        width: "100%",
+                        width: { mobile: "100%", tablet: "50%" },
                     }}
                 >
                     {game.main.copy}
                 </ContainedButton>
             </Grid>
 
+            {/* whatsapp button */}
             <Grid container item justifyContent="center">
                 <ContainedButton
                     startIcon={<WhatsAppIcon />}
                     onClick={handleWhatsappShare}
                     sx={{
-                        width: "100%",
+                        width: { mobile: "100%", tablet: "50%" },
                         backgroundColor: theme.palette.success.main,
                     }}
                 >
@@ -160,6 +218,7 @@ const MainWindow = () => {
                 </ContainedButton>
             </Grid>
 
+            {/* red button */}
             <Grid container item justifyContent="center">
                 <ContainedButton
                     startIcon={
@@ -171,7 +230,7 @@ const MainWindow = () => {
                     }
                     onClick={handleRedButton}
                     sx={{
-                        width: "100%",
+                        width: { mobile: "100%", tablet: "50%" },
                         backgroundColor: theme.palette.error.main,
                     }}
                 >

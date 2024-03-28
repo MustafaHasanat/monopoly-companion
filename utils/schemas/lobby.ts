@@ -1,7 +1,7 @@
 import { GameTemplate } from "@/utils/enums";
 import * as yup from "yup";
 
-const createSchema = yup.object().shape({
+export const createGameSchema = yup.object().shape({
     template: yup
         .string()
         .oneOf(
@@ -12,4 +12,6 @@ const createSchema = yup.object().shape({
         .default(GameTemplate.CLASSIC),
 });
 
-export default createSchema;
+export const joinGameSchema = yup.object().shape({
+    code: yup.string().required("Game code is required"),
+});

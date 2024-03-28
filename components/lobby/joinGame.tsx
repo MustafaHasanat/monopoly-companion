@@ -4,7 +4,6 @@ import { ContainedButton } from "../shared/button";
 import useLocale from "@/hooks/useLocale";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import joinSchema from "./schemas/joinGame";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
 import { TextFieldForm } from "../shared/form";
@@ -15,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { controlsSlice } from "@/utils/redux/controls-slice";
 import { gameSlice } from "@/utils/redux/game-slice";
 import { useSearchParams } from "next/navigation";
+import { joinGameSchema } from "@/utils/schemas";
 
 interface Props {
     setCords: Dispatch<SetStateAction<CordsType>>;
@@ -32,7 +32,7 @@ const JoinGame = ({ setCords }: Props) => {
         formState: { errors },
         handleSubmit,
     } = useForm({
-        resolver: yupResolver(joinSchema),
+        resolver: yupResolver(joinGameSchema),
         defaultValues: {
             code: code || "",
         },

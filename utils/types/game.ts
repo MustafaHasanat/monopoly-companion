@@ -1,4 +1,5 @@
-import { GameTemplate } from "../enums";
+import { GameTemplate, TransactionStatus } from "../enums";
+import { TransactionReason } from "../enums";
 
 export type GameType = {
     id: string;
@@ -9,3 +10,15 @@ export type GameType = {
 };
 
 export type CordsType = { x: number; y: number };
+
+export type TransactionType = {
+    id: string;
+    reason: TransactionReason;
+    amount: number;
+    is_request: boolean; // true: this is a request to the banker, false: this is a transaction between players
+    status: TransactionStatus; // make it in_active once its done if it's a request, and immediately if it was between players
+    sender_id: string;
+    recipient_id: string;
+    game_id: string;
+    created_at: string;
+};

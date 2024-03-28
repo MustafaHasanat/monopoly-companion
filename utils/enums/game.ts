@@ -11,3 +11,8 @@ export enum TransactionReason {
     ROUND = "round",
     MORTGAGE = "mortgage",
 }
+
+export enum TransactionStatus {
+    ACTIVE = "active",
+    INACTIVE = "inactive",
+}

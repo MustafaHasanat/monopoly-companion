@@ -4,7 +4,6 @@
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { schema } from "./schemas/account";
 import { updateProfile } from "@/app/[locale]/account/action";
 import { Avatar, Grid, Typography } from "@mui/material";
 import { SelectBox, TextFieldForm } from "../shared/form";
@@ -16,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { controlsSlice } from "@/utils/redux/controls-slice";
 import useAuthGuard from "@/hooks/useAuthGuard";
+import { accountSchema } from "@/utils/schemas";
 
 const AccountForm = () => {
     const { getDictLocales } = useLocale();
@@ -34,7 +34,7 @@ const AccountForm = () => {
         setValue,
         handleSubmit,
     } = useForm({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(accountSchema),
         defaultValues: {
             username: "",
             email: "",
@@ -132,6 +132,7 @@ const AccountForm = () => {
                                 values={Object.keys(UserAvatar)}
                                 labels={Object.values(userAvatarMapping(true))}
                                 error={!!errors.avatar}
+                                helperText={errors.avatar?.message}
                             />
                         )}
                     />

@@ -6,11 +6,11 @@ import { TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import registerSchema from "./schemas/register";
 import { useRouter } from "next/navigation";
 import { login, register } from "@/app/[locale]/auth/action";
 import { useDispatch } from "react-redux";
 import { controlsSlice } from "@/utils/redux/controls-slice";
+import { registerSchema } from "@/utils/schemas";
 
 const Register = () => {
     const { getDictLocales } = useLocale();

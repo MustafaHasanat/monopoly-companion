@@ -1,7 +1,7 @@
 import { UserAvatar } from "@/utils/enums";
 import * as yup from "yup";
 
-export const schema = yup.object().shape({
+export const accountSchema = yup.object().shape({
     avatar: yup
         .string()
         .required("Avatar is required")
