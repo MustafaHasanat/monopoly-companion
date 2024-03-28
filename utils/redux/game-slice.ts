@@ -20,6 +20,9 @@ export const gameSlice = createSlice({
         ) => {
             state.game = game;
         },
+        clearGame: (state: { game: GameType }) => {
+            state.game = INITIAL_GAME_DATA;
+        },
     },
 });
 

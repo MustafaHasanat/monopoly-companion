@@ -1,6 +1,5 @@
 import { Button, Grid } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { join } from "path";
 import { ReactNode } from "react";
 
 const ControlButton = ({
@@ -29,7 +28,7 @@ const ControlButton = ({
         >
             <Button
                 onClick={() => {
-                    router.replace(join("/game", path));
+                    router.replace(`game?active=${path}`);
                 }}
                 sx={{
                     height: "auto",

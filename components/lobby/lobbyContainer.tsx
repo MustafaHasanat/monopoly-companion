@@ -9,14 +9,14 @@ import { Container } from "@mui/material";
 import { useState } from "react";
 
 const LobbyContainer = () => {
-    const { isAccessible, loadingComponent } = useAuthGuard();
+    const { isAccessible, loadingComponent } = useAuthGuard({ page: "lobby" });
 
     const [cords, setCords] = useState<CordsType>({
         x: 0,
         y: 1,
     });
 
-    return isAccessible ? (
+    return !isAccessible ? (
         loadingComponent
     ) : (
         <Container

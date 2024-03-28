@@ -9,7 +9,7 @@ import {
     useState,
 } from "react";
 import { logout } from "@/app/[locale]/auth/action";
-import { GAME_CODE, getNavItems } from "@/utils/constants";
+import { getNavItems } from "@/utils/constants";
 import LoginIcon from "@mui/icons-material/Login";
 import LockIcon from "@mui/icons-material/Lock";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -19,14 +19,14 @@ import { useRouter } from "next/navigation";
 import useLocale from "@/hooks/useLocale";
 import { endTheGameProcess } from "@/utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
+import { selectAuth } from "@/utils/redux/auth-slice";
 
-type NavButtonType = {
-    text: string;
-    onClick: () => void;
-    Icon: ReactNode;
-};
+// type NavButtonType = {
+//     text: string;
+//     onClick: () => void;
+//     Icon: ReactNode;
+// };
 
 interface Props {
     boxIsOpen: boolean;
@@ -51,8 +51,8 @@ const NavItems = ({ boxIsOpen, setBoxIsOpen }: Props) => {
     const { getDictLocales } = useLocale();
     const { header } = getDictLocales();
     const dispatch = useDispatch();
-    const { session, user } = useSelector(selectAuth);
     const { game } = useSelector(selectGame);
+    const { user, session } = useSelector(selectAuth);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
@@ -65,13 +65,10 @@ const NavItems = ({ boxIsOpen, setBoxIsOpen }: Props) => {
 
     const handleLogout = async () => {
         setBoxIsOpen(false);
-        // get the game code form the device
-        const code = window.localStorage.getItem(GAME_CODE);
         // only proceed to this if the user is currently playing a game
-        if (code) {
+        if (game.code) {
             // end the game
             await endTheGameProcess({
-                code,
                 user,
                 game,
                 dispatch,

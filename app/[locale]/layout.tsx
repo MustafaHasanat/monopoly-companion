@@ -8,7 +8,6 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import SnackbarWrapper from "../../components/layout/snackbar";
 import { createClient } from "@/utils/supabase/server";
-import ControlsBox from "@/components/game/controlsBox";
 import { Locale, i18n } from "@/utils/locales/i18n.config";
 
 export const metadata: Metadata = {
@@ -44,7 +43,6 @@ export default async function RootLayout({
                 <Body user={user} session={session}>
                     <Modal />
                     <Header />
-                    <ControlsBox />
                     {children}
                     <Footer />
                     <SnackbarWrapper />

@@ -2,10 +2,10 @@
 
 import useAuthGuard from "@/hooks/useAuthGuard";
 
-const RequestWindow = () => {
+const BankWindow = () => {
     const { isAccessible, loadingComponent } = useAuthGuard({ page: "game" });
 
-    return isAccessible ? loadingComponent : <>RequestWindow</>;
+    return !isAccessible ? loadingComponent : <>BankWindow</>;
 };
 
-export default RequestWindow;
+export default BankWindow;

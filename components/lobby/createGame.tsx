@@ -36,6 +36,9 @@ const CreateGame = ({
         handleSubmit,
     } = useForm({
         resolver: yupResolver(createSchema),
+        defaultValues: {
+            template: GameTemplate.CLASSIC,
+        },
     });
 
     const onSubmit = async (formData: { template: string }) => {

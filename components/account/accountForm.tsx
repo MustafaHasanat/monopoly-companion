@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schemas/account";
 import { updateProfile } from "@/app/[locale]/account/action";
-import { Avatar, Grid, MenuItem, Typography } from "@mui/material";
+import { Avatar, Grid, Typography } from "@mui/material";
 import { SelectBox, TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
 import { UserAvatar } from "@/utils/enums";
@@ -22,10 +22,10 @@ const AccountForm = () => {
     const { auth } = getDictLocales();
     const { user } = useSelector(selectAuth);
     const dispatch = useDispatch();
-    const { isAccessible, loadingComponent } = useAuthGuard();
+    const { isAccessible, loadingComponent } = useAuthGuard({
+        page: "account",
+    });
     const [avatarURL, setAvatarURL] = useState(AVATAR_PLACEHOLDER);
-    const [avatarPreviewURL, setAvatarPreviewURL] =
-        useState(AVATAR_PLACEHOLDER);
 
     const {
         control,
@@ -79,7 +79,7 @@ const AccountForm = () => {
             });
     };
 
-    return isAccessible ? (
+    return !isAccessible ? (
         loadingComponent
     ) : (
         <Grid

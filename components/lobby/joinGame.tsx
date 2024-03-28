@@ -14,6 +14,7 @@ import { LOBBY_CORDS } from "@/utils/constants/game";
 import { useDispatch, useSelector } from "react-redux";
 import { controlsSlice } from "@/utils/redux/controls-slice";
 import { gameSlice } from "@/utils/redux/game-slice";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
     setCords: Dispatch<SetStateAction<CordsType>>;
@@ -23,6 +24,8 @@ const JoinGame = ({ setCords }: Props) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
     const dispatch = useDispatch();
+    const searchParams = useSearchParams();
+    const code = searchParams.get("code");
 
     const {
         control,
@@ -30,6 +33,9 @@ const JoinGame = ({ setCords }: Props) => {
         handleSubmit,
     } = useForm({
         resolver: yupResolver(joinSchema),
+        defaultValues: {
+            code: code || "",
+        },
     });
 
     const onSubmit = async (formData: { code: string }) => {

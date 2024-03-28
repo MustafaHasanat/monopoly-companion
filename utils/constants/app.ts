@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 export const FRONTEND_URL = process.env.FRONTEND_URL;
 
 export const SOCIAL_ICONS = [
@@ -26,6 +24,10 @@ export const SOCIAL_ICONS = [
 ];
 
 export const PRIVATE_PATHS = ["lobby", "game", "account"];
+
+export const PUBLIC_PATHS = ["auth"];
+
+export const INTERCEPTED_PATHS = [];
 
 export const getNavItems = ({
     header,

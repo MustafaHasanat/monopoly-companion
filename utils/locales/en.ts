@@ -81,7 +81,9 @@ const en = {
         },
         main: {
             title: "Main Page",
-            code: "Game code: ",
+            credit: "Your credit: ",
+            role: "Your role: ",
+            code: "Game Code ",
             copy: "Copy to clipboard",
             share: "Share on Whatsapp",
             leave: "Leave the game",
@@ -96,7 +98,7 @@ const en = {
             submit: "Submit Request",
             action: "Action",
         },
-        requests: {
+        bankRequests: {
             title: "Current Requests",
         },
         history: {

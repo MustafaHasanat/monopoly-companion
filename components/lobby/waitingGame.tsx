@@ -22,12 +22,6 @@ const WaitingGame = ({ setCords }: Props) => {
     const [gameCode, setGameCode] = useState("--------");
 
     useEffect(() => {
-        // TODO: needs web-socket
-        // window.localStorage.setItem(
-        //     GAME_CODE,
-        //     response?.data[0] as string
-        // );
-
         if (user) setHost(user.username);
         if (game) setGameCode(game.code);
     }, [game, user]);

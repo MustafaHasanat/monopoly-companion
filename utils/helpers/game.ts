@@ -1,21 +1,18 @@
 import { changeUserStatus } from "@/app/[locale]/auth/action";
-import { GAME_CODE, INITIAL_GAME_DATA } from "../constants";
 import { UserStatus } from "../enums";
 import { GameType, Player } from "../types";
 import { endTheGame, getGameByCode } from "@/app/[locale]/game/action";
 import { Dispatch, UnknownAction } from "redux";
-import { authSlice, selectAuth } from "../redux/auth-slice";
+import { authSlice } from "../redux/auth-slice";
 import { gameSlice } from "../redux/game-slice";
 
 interface BaseGameProps {
-    code: string;
     user: Player;
     game: GameType;
     dispatch: Dispatch<UnknownAction>;
 }
 
 export const startTheGameProcess = async ({
-    code,
     user,
     game,
     dispatch,
@@ -36,12 +33,10 @@ export const startTheGameProcess = async ({
             game,
         })
     );
-    // set the game code in teh device
-    window.localStorage.setItem(GAME_CODE, code);
 };
 
 export const endTheGameProcess = async ({
-    code,
+    game,
     user,
     dispatch,
 }: BaseGameProps) => {
@@ -58,20 +53,14 @@ export const endTheGameProcess = async ({
         })
     );
     // set the game object in the global state
-    dispatch(
-        gameSlice.actions.setGame({
-            game: INITIAL_GAME_DATA,
-        })
-    );
+    dispatch(gameSlice.actions.clearGame());
     // kill the game if the banker logged out
-    const response = await getGameByCode({ code });
+    const response = await getGameByCode({ code: game.code });
     if (
         response?.data &&
         response?.data.length > 0 &&
         user.id === response?.data[0].banker_id
     ) {
-        await endTheGame({ code });
+        await endTheGame({ code: game.code });
     }
-    // delete the game code form the device
-    window.localStorage.removeItem(GAME_CODE);
 };

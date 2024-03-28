@@ -8,7 +8,8 @@ const createSchema = yup.object().shape({
             Object.values(GameTemplate),
             `Template must be one of: ${Object.values(GameTemplate)}`
         )
-        .required("Template is required"),
+        .required("Template is required")
+        .default(GameTemplate.CLASSIC),
 });
 
 export default createSchema;

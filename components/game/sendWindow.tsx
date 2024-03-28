@@ -3,9 +3,9 @@
 import useAuthGuard from "@/hooks/useAuthGuard";
 
 const SendWindow = () => {
-    const { isAccessible, loadingComponent } = useAuthGuard();
+    const { isAccessible, loadingComponent } = useAuthGuard({ page: "game" });
 
-    return isAccessible ? loadingComponent : <>SendWindow</>;
+    return !isAccessible ? loadingComponent : <>SendWindow</>;
 };
 
 export default SendWindow;

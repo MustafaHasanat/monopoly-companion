@@ -1,12 +1,12 @@
 "use client";
 
-import MainWindow from "@/components/game/mainWindow";
-import Main from "@/components/layout/main";
+import WindowController from "@/components/game/windowController";
+import { GamePage } from "@/utils/types";
+import { useSearchParams } from "next/navigation";
 
 export default function Dashboard() {
-    return (
-        <Main>
-            <MainWindow />
-        </Main>
-    );
+    const searchParams = useSearchParams();
+    const activePage: GamePage = searchParams.get("active") as GamePage;
+
+    return <WindowController page={activePage || "main"} />;
 }

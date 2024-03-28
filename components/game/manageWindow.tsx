@@ -3,9 +3,9 @@
 import useAuthGuard from "@/hooks/useAuthGuard";
 
 const ManageWindow = () => {
-    const { isAccessible, loadingComponent } = useAuthGuard();
+    const { isAccessible, loadingComponent } = useAuthGuard({ page: "game" });
 
-    return isAccessible ? loadingComponent : <>ManageWindow</>;
+    return !isAccessible ? loadingComponent : <>ManageWindow</>;
 };
 
 export default ManageWindow;

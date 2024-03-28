@@ -2,14 +2,14 @@
 "use client";
 
 import useLocale from "@/hooks/useLocale";
-import { GAME_CODE } from "@/utils/constants";
 import { normalizeUser } from "@/utils/helpers";
 import { authSlice } from "@/utils/redux/auth-slice";
-import { Box, Grid } from "@mui/material";
+import { selectGame } from "@/utils/redux/game-slice";
+import { Grid } from "@mui/material";
 import { Session, User } from "@supabase/supabase-js";
 import { useRouter, usePathname } from "next/navigation";
 import { ReactNode, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
     children: ReactNode;
@@ -23,6 +23,7 @@ const Body = ({ children, user, session }: Props) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const pathname = usePathname();
+    const { game } = useSelector(selectGame);
 
     useEffect(() => {
         dispatch(authSlice.actions.setUser({ user: normalizeUser(user) }));
@@ -30,9 +31,7 @@ const Body = ({ children, user, session }: Props) => {
     }, [user, session]);
 
     useEffect(() => {
-        const code = window.localStorage.getItem(GAME_CODE);
-
-        if (session?.access_token && code && !pathname.includes("game")) {
+        if (session?.access_token && game.code && !pathname.includes("game")) {
             router.replace("game");
         }
     }, [pathname, session]);

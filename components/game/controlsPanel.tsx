@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
 
-const ControlsBox = () => {
+const ControlsPanel = () => {
     const pathname = usePathname();
     const theme = useTheme();
     const { user } = useSelector(selectAuth);
@@ -29,12 +29,12 @@ const ControlsBox = () => {
     };
 
     const iconsMapping: { [key: string]: ReactNode } = {
-        "/": <EngineeringRoundedIcon sx={iconStyles} />,
-        "/send": <SendRoundedIcon sx={iconStyles} />,
-        "/request": <RequestPageRoundedIcon sx={iconStyles} />,
-        "/requests": <PointOfSaleRoundedIcon sx={iconStyles} />,
-        "/history": <ScheduleRoundedIcon sx={iconStyles} />,
-        "/manage": <AdminPanelSettingsRoundedIcon sx={iconStyles} />,
+        "main": <EngineeringRoundedIcon sx={iconStyles} />,
+        "send": <SendRoundedIcon sx={iconStyles} />,
+        "request": <RequestPageRoundedIcon sx={iconStyles} />,
+        "bank": <PointOfSaleRoundedIcon sx={iconStyles} />,
+        "history": <ScheduleRoundedIcon sx={iconStyles} />,
+        "manage": <AdminPanelSettingsRoundedIcon sx={iconStyles} />,
     };
 
     return pathname.includes("game") ? (
@@ -42,7 +42,7 @@ const ControlsBox = () => {
             container
             justifyContent="space-between"
             alignItems="center"
-            width="100vw"
+            width="100%"
             rowGap={{ mobile: 2, tablet: 2, laptop: 2 }}
             p={{
                 mobile: "50px 10px 20px 10px",
@@ -73,4 +73,4 @@ const ControlsBox = () => {
     );
 };
 
-export default ControlsBox;
+export default ControlsPanel;

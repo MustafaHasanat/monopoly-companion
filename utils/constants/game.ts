@@ -1,8 +1,6 @@
 import { GameTemplate } from "../enums";
 import { CordsType, GameType } from "../types";
 
-export const GAME_CODE = "game_code";
-
 export const INITIAL_GAME_DATA: GameType = {
     id: "",
     created_at: "",
@@ -29,10 +27,10 @@ export const LOBBY_CORDS: {
 };
 
 export const CONTROLS_ICONS = [
-    { path: "/", isBankerOnly: false },
-    { path: "/send", isBankerOnly: false },
-    { path: "/request", isBankerOnly: false },
-    { path: "/requests", isBankerOnly: true },
-    { path: "/history", isBankerOnly: false },
-    { path: "/manage", isBankerOnly: true },
+    { path: "main", isBankerOnly: false },
+    { path: "send", isBankerOnly: false },
+    { path: "request", isBankerOnly: false },
+    { path: "bank", isBankerOnly: true },
+    { path: "history", isBankerOnly: false },
+    { path: "manage", isBankerOnly: true },
 ];

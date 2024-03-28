@@ -24,7 +24,9 @@ const LoadingPage = ({ phrase }: Props) => {
                 gap: 5,
             }}
         >
-            <Typography variant="h3">{phrase || global.loading}</Typography>
+            <Typography variant="h3" textAlign="center">
+                {phrase || global.loading}
+            </Typography>
             <CircularProgress size={100} />
         </Main>
     );
