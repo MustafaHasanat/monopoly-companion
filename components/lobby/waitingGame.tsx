@@ -8,10 +8,12 @@ import { LOBBY_CORDS } from "@/utils/constants/game";
 import { selectGame } from "@/utils/redux/game-slice";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { useSelector } from "react-redux";
+import { getUserById } from "@/app/[locale]/auth/action";
 
 interface Props {
     setCords: Dispatch<SetStateAction<CordsType>>;
 }
+
 const WaitingGame = ({ setCords }: Props) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
@@ -22,6 +24,12 @@ const WaitingGame = ({ setCords }: Props) => {
     const [gameCode, setGameCode] = useState("--------");
 
     useEffect(() => {
+        // const getData = async () => {
+        //     const hostData = await getUserById({ id: game.banker_id });
+        //     console.log(hostData);
+        // };
+        // getData();
+
         if (user) setHost(user.username);
         if (game) setGameCode(game.code);
     }, [game, user]);

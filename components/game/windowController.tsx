@@ -12,6 +12,11 @@ import BankWindow from "./bankWindow";
 import SendWindow from "./sendWindow";
 import useLocale from "@/hooks/useLocale";
 import ControlsPanel from "./controlsPanel";
+import useAuthGuard from "@/hooks/useAuthGuard";
+import { useSelector } from "react-redux";
+import { selectGame } from "@/utils/redux/game-slice";
+import { selectAuth } from "@/utils/redux/auth-slice";
+import { UserStatus } from "@/utils/enums";
 
 interface Props {
     page: GamePage;
@@ -21,6 +26,15 @@ const WindowController = ({ page }: Props) => {
     const [activePage, setActivePage] = useState(page);
     const { getDictLocales } = useLocale();
     const { game } = getDictLocales();
+    const { game: gameObj } = useSelector(selectGame);
+    const { user } = useSelector(selectAuth);
+    const { isAccessible, loadingComponent } = useAuthGuard({
+        page: "game",
+        customCondition:
+            !!gameObj.code &&
+            gameObj.id === user.game_id &&
+            [UserStatus.BANKER, UserStatus.CITIZEN].includes(user.status),
+    });
 
     useEffect(() => {
         setActivePage(page);
@@ -35,7 +49,9 @@ const WindowController = ({ page }: Props) => {
         manage: { component: <ManageWindow />, title: game.manage.title },
     };
 
-    return (
+    return !isAccessible ? (
+        loadingComponent
+    ) : (
         <Main
             sx={{
                 px: {

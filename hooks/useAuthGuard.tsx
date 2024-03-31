@@ -10,13 +10,14 @@ import LoadingPage from "@/components/shared/loading";
 
 interface Props {
     page: "account" | "lobby" | "game" | "auth";
+    customCondition?: boolean;
 }
 interface ReturnProps {
     isAccessible: boolean;
     loadingComponent: ReactNode;
 }
 
-const useAuthGuard = ({ page }: Props): ReturnProps => {
+const useAuthGuard = ({ page, customCondition = true }: Props): ReturnProps => {
     const { getDictLocales } = useLocale();
     const { global } = getDictLocales();
     const { session } = useSelector(selectAuth);
@@ -30,8 +31,9 @@ const useAuthGuard = ({ page }: Props): ReturnProps => {
 
     useEffect(() => {
         const isLoggedIn = !!session?.access_token;
+
         if (isLoggedIn) {
-            if (isPrivatePath) {
+            if (isPrivatePath && customCondition) {
                 setIsAccessible(true);
             } else {
                 setIsAccessible(false);
@@ -40,7 +42,7 @@ const useAuthGuard = ({ page }: Props): ReturnProps => {
                 }, 1000);
             }
         } else {
-            if (isPrivatePath) {
+            if (isPrivatePath && customCondition) {
                 setIsAccessible(false);
                 setTimeout(() => {
                     router.replace("/auth?active=login");
@@ -49,7 +51,13 @@ const useAuthGuard = ({ page }: Props): ReturnProps => {
                 setIsAccessible(true);
             }
         }
-    }, [isPrivatePath, pathname, router, session?.access_token]);
+    }, [
+        customCondition,
+        isPrivatePath,
+        pathname,
+        router,
+        session?.access_token,
+    ]);
 
     return {
         isAccessible,

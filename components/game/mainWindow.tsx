@@ -1,6 +1,5 @@
 "use client";
 
-import useAuthGuard from "@/hooks/useAuthGuard";
 import useLocale from "@/hooks/useLocale";
 import useAsyncStates from "@/hooks/useAsyncStates";
 import { AVATAR_PLACEHOLDER, userAvatarMapping } from "@/utils/constants";
@@ -11,9 +10,6 @@ import {
     Divider,
     Grid,
     List,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
     Typography,
     useTheme,
 } from "@mui/material";
@@ -29,9 +25,9 @@ import { endTheGameProcess } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import React from "react";
 import PlayerCard from "./playerCard";
+import { endSubscription } from "@/app/[locale]/game/action";
 
 const MainWindow = () => {
-    const { isAccessible, loadingComponent } = useAuthGuard({ page: "game" });
     const { game: gameObj } = useSelector(selectGame);
     const { user } = useSelector(selectAuth);
     const dispatch = useDispatch();
@@ -55,15 +51,11 @@ const MainWindow = () => {
 
     const handleRedButton = async () => {
         userStatus === UserStatus.BANKER;
-        // only proceed to this if the user is currently playing a game
-        if (gameObj.code) {
-            // end the game
-            await endTheGameProcess({
-                user,
-                game: gameObj,
-                dispatch,
-            });
-        }
+        await endTheGameProcess({
+            user,
+            game: gameObj,
+            dispatch,
+        });
         // redirect the user
         router.replace("/lobby");
     };
@@ -97,9 +89,7 @@ const MainWindow = () => {
         }
     };
 
-    return !isAccessible ? (
-        loadingComponent
-    ) : (
+    return (
         <>
             {/* player details */}
             <Grid container gap={2}>

@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import useAuthGuard from "@/hooks/useAuthGuard";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { sendSchema } from "@/utils/schemas";
@@ -24,7 +23,6 @@ export type PartialPlayer = Omit<
 >;
 
 const SendWindow = () => {
-    const { isAccessible, loadingComponent } = useAuthGuard({ page: "game" });
     const { getDictLocales } = useLocale();
     const { game } = getDictLocales();
     const { user } = useSelector(selectAuth);
@@ -130,9 +128,7 @@ const SendWindow = () => {
             });
     };
 
-    return !isAccessible ? (
-        loadingComponent
-    ) : (
+    return (
         <Grid
             container
             justifyContent="center"

@@ -22,6 +22,17 @@ export async function generateStaticParams() {
     return i18n.locales.map((locale) => ({ locale }));
 }
 
+async function getData() {
+    const supabase = createClient();
+    const userResponse = await supabase.auth.getUser();
+    const sessionResponse = await supabase.auth.getSession();
+
+    return {
+        user: userResponse.data.user,
+        session: sessionResponse.data.session,
+    };
+}
+
 export default async function RootLayout({
     children,
     params,
@@ -29,13 +40,7 @@ export default async function RootLayout({
     children: React.ReactNode;
     params: { locale: Locale };
 }>) {
-    const supabase = createClient();
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-    const {
-        data: { session },
-    } = await supabase.auth.getSession();
+    const { user, session } = await getData();
 
     return (
         <html lang={params.locale}>

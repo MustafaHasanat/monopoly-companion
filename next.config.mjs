@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-
+  
     typescript: {
-        tsconfigPath: "./tsconfig.json",
-        ignoreBuildErrors: true,
+      tsconfigPath: "./tsconfig.json",
+      ignoreBuildErrors: true,
     },
-
+  
     async redirects() {
         return [
             {
@@ -34,11 +34,6 @@ const nextConfig = {
                 destination: "/en/game",
                 permanent: false,
             },
-            // {
-            //     source: "/en/game",
-            //     destination: "/en/game?active=main",
-            //     permanent: false,
-            // },
             {
                 source: "/error",
                 destination: "/en/error",

@@ -10,11 +10,11 @@ import { TextFieldForm } from "../shared/form";
 import { getGameByCode } from "@/app/[locale]/game/action";
 import { CordsType } from "@/utils/types";
 import { LOBBY_CORDS } from "@/utils/constants/game";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { controlsSlice } from "@/utils/redux/controls-slice";
-import { gameSlice } from "@/utils/redux/game-slice";
 import { useSearchParams } from "next/navigation";
 import { joinGameSchema } from "@/utils/schemas";
+import { joinTheGameProcess } from "@/utils/helpers/game";
 
 interface Props {
     setCords: Dispatch<SetStateAction<CordsType>>;
@@ -53,11 +53,11 @@ const JoinGame = ({ setCords }: Props) => {
                         },
                     })
                 );
-                dispatch(
-                    gameSlice.actions.setGame({
-                        game: response?.data[0],
-                    })
-                );
+                // send a request to join the game
+                await joinTheGameProcess({
+                    game: response.data[0],
+                    dispatch,
+                });
                 setCords(LOBBY_CORDS.waiting);
             } else {
                 dispatch(

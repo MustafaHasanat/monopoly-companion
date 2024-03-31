@@ -26,5 +26,16 @@ export async function createNewGame({
         })
         .select();
 
+    supabase
+        .channel(codeResponse.data || "")
+        .on("postgres_changes", { event: "*", schema: "*" }, (payload) => {
+            console.log("Change received!", payload);
+        })
+        .subscribe();
+
     return { response, codeResponse };
+}
+
+export async function joinGame({ code }: { code: string }) {
+    const supabase = createClient();
 }

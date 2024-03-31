@@ -1,11 +1,20 @@
 "use client";
 
-import useAuthGuard from "@/hooks/useAuthGuard";
+import useLocale from "@/hooks/useLocale";
+import { Grid, Typography } from "@mui/material";
 
 const ManageWindow = () => {
-    const { isAccessible, loadingComponent } = useAuthGuard({ page: "game" });
+    const { getDictLocales } = useLocale();
+    const { game } = getDictLocales();
 
-    return !isAccessible ? loadingComponent : <>ManageWindow</>;
+    return (
+        <>
+            <Grid container item justifyContent="center">
+                <Typography variant="h5">{game.manage.players}</Typography>
+            </Grid>
+            <Grid container item justifyContent="center"></Grid>
+        </>
+    );
 };
 
 export default ManageWindow;

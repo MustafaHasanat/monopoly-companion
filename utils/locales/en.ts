@@ -107,6 +107,7 @@ const en = {
         },
         manage: {
             title: "Manager Panel",
+            players: "Players Section",
             player: "Player",
             name: "Name",
             active: "Active",

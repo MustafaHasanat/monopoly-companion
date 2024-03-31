@@ -1,6 +1,5 @@
 "use client";
 
-import useAuthGuard from "@/hooks/useAuthGuard";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { requestSchema } from "@/utils/schemas";
@@ -16,11 +15,11 @@ import { selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
 
 const RequestWindow = () => {
-    const { isAccessible, loadingComponent } = useAuthGuard({ page: "game" });
     const { getDictLocales } = useLocale();
     const { user } = useSelector(selectAuth);
     const { game: gameObj } = useSelector(selectGame);
-    const dispatch = useDispatch(); const { game } = getDictLocales();
+    const dispatch = useDispatch();
+    const { game } = getDictLocales();
 
     const {
         control,
@@ -61,9 +60,7 @@ const RequestWindow = () => {
             });
     };
 
-    return !isAccessible ? (
-        loadingComponent
-    ) : (
+    return (
         <Grid
             container
             justifyContent="center"

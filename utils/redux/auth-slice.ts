@@ -23,6 +23,15 @@ export const authSlice = createSlice({
         ) => {
             state.user = user;
         },
+        updateUser: (
+            state: { user: Player },
+            { payload: { user } }: StorePayload<{ user: Partial<Player> }>
+        ) => {
+            state.user = {
+                ...state.user,
+                ...user,
+            };
+        },
         setSession: (
             state: { session: null | Session },
             { payload: { session } }: StorePayload<{ session: null | Session }>
@@ -32,6 +41,6 @@ export const authSlice = createSlice({
     },
 });
 
-export const { setUser, setSession } = authSlice.actions;
+export const { setUser, setSession, updateUser } = authSlice.actions;
 
 export const selectAuth = (state: { auth: initialStateProps }) => state.auth;

@@ -2,8 +2,9 @@
 "use client";
 
 import useLocale from "@/hooks/useLocale";
+import { UserStatus } from "@/utils/enums";
 import { normalizeUser } from "@/utils/helpers";
-import { authSlice } from "@/utils/redux/auth-slice";
+import { authSlice, selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
 import { Grid } from "@mui/material";
 import { Session, User } from "@supabase/supabase-js";
@@ -24,14 +25,22 @@ const Body = ({ children, user, session }: Props) => {
     const router = useRouter();
     const pathname = usePathname();
     const { game } = useSelector(selectGame);
+    const { user: player } = useSelector(selectAuth);
 
     useEffect(() => {
-        dispatch(authSlice.actions.setUser({ user: normalizeUser(user) }));
+        const player = normalizeUser(user);
+        dispatch(authSlice.actions.setUser({ user: player }));
         dispatch(authSlice.actions.setSession({ session }));
     }, [user, session]);
 
     useEffect(() => {
-        if (session?.access_token && game.code && !pathname.includes("game")) {
+        if (
+            session?.access_token &&
+            game.code &&
+            player.game_id &&
+            [UserStatus.BANKER, UserStatus.CITIZEN].includes(player.status) &&
+            !pathname.includes("game")
+        ) {
             router.replace("game");
         }
     }, [pathname, session]);

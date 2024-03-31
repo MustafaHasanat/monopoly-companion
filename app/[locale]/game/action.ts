@@ -25,10 +25,15 @@ export async function getGameByCode({
 
 export async function endTheGame({ code }: { code: string }) {
     const supabase = createClient();
-
     const response = await supabase.from("game").delete().eq("code", code);
 
     return response;
+}
+
+// unsubscribe from real-time db
+export async function endSubscription() {
+    const supabase = createClient();
+    await supabase.removeAllChannels();
 }
 
 export async function sendCredit({

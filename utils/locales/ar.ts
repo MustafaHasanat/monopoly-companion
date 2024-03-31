@@ -106,6 +106,7 @@ const ar = {
         },
         manage: {
             title: "Manager Panel",
+            players: "Players Panel",
             player: "Player",
             name: "Name",
             active: "Active",

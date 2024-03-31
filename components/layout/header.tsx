@@ -18,9 +18,11 @@ import LanguageIcon from "@mui/icons-material/Language";
 import NavItems from "./navItems";
 import { useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
     const theme = useTheme();
+    const pathname = usePathname();
     const { getDictLocales, toggleLocale } = useLocale();
     const { header } = getDictLocales();
     const [boxIsOpen, setBoxIsOpen] = useState(false);
@@ -33,6 +35,10 @@ const Header = () => {
         if (session?.access_token)
             setAvatarImage(userAvatarMapping()[user?.avatar as UserAvatar]);
     }, [session?.access_token, user?.avatar]);
+
+    useEffect(() => {
+        setBoxIsOpen(false);
+    }, [pathname]);
 
     return (
         <AppBar

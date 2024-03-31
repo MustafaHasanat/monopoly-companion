@@ -21,12 +21,7 @@ import { endTheGameProcess } from "@/utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { selectGame } from "@/utils/redux/game-slice";
 import { selectAuth } from "@/utils/redux/auth-slice";
-
-// type NavButtonType = {
-//     text: string;
-//     onClick: () => void;
-//     Icon: ReactNode;
-// };
+import { endSubscription } from "@/app/[locale]/game/action";
 
 interface Props {
     boxIsOpen: boolean;
@@ -65,18 +60,14 @@ const NavItems = ({ boxIsOpen, setBoxIsOpen }: Props) => {
 
     const handleLogout = async () => {
         setBoxIsOpen(false);
-        // only proceed to this if the user is currently playing a game
-        if (game.code) {
-            // end the game
-            await endTheGameProcess({
-                user,
-                game,
-                dispatch,
-            });
-        }
+        await endTheGameProcess({
+            user,
+            game,
+            dispatch,
+        });
         // log out the user and redirect them
         logout();
-        router.replace("/auth?active=login");
+        router.replace("/");
     };
 
     const handleNavItemClick = async (name: string) => {

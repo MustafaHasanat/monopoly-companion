@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import { createAdminClient, createClient } from "@/utils/supabase/server";
 import { UserAvatar, UserStatus } from "@/utils/enums";
 
 export async function login({
@@ -55,14 +55,29 @@ export async function logout() {
     return response;
 }
 
-export async function changeUserStatus({ status }: { status: UserStatus }) {
+export async function updateUser({
+    status,
+    game_id,
+}: {
+    status: UserStatus;
+    game_id: string | null;
+}) {
     const supabase = createClient();
 
     const response = await supabase.auth.updateUser({
         data: {
             status,
+            game_id,
         },
     });
+
+    return response;
+}
+
+export async function getUserById({ id }: { id: string }) {
+    const supabase = createAdminClient();
+
+    const response = await supabase.auth.admin.getUserById(id);
 
     return response;
 }
