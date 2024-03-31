@@ -68,8 +68,10 @@ const ar = {
         sender: "Sender",
         amount: "Amount",
         reason: "Reason",
+        actions: "Actions",
         bank: "Bank",
         status: "Status",
+        name: "Name",
         reasons: {
             rent: "Rent",
             buy: "Buy",
@@ -108,7 +110,6 @@ const ar = {
             title: "Manager Panel",
             players: "Players Panel",
             player: "Player",
-            name: "Name",
             active: "Active",
             broke: "Broke",
             kick: "Kick out",
