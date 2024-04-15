@@ -14,7 +14,7 @@ export async function createNewGame({
     const supabase = createClient();
 
     const codeResponse: PostgrestSingleResponse<string> = await supabase.rpc(
-        "generate_unique_game_code"
+        "generate_unique_game_code",
     );
 
     const response: PostgrestSingleResponse<GameType[]> = await supabase
@@ -26,16 +26,6 @@ export async function createNewGame({
         })
         .select();
 
-    supabase
-        .channel(codeResponse.data || "")
-        .on("postgres_changes", { event: "*", schema: "*" }, (payload) => {
-            console.log("Change received!", payload);
-        })
-        .subscribe();
-
-    return { response, codeResponse };
+    return response;
 }
 
-export async function joinGame({ code }: { code: string }) {
-    const supabase = createClient();
-}

@@ -23,24 +23,7 @@ const PasswordReset = () => {
         },
     });
 
-    const onSubmit = async (formData: {
-        password: string;
-        newPassword: string;
-    }) => {
-        // await updateProfile(formData)
-        //     .then(() => {
-        //         setSnackbarState({
-        //             message: "Profile updated successfully",
-        //             severity: "success",
-        //         });
-        //     })
-        //     .catch((error) => {
-        //         setSnackbarState({
-        //             message: "Error occurred",
-        //             severity: "error",
-        //         });
-        //     });
-    };
+    const onSubmit = async (formData: { password: string; newPassword: string }) => {};
 
     return (
         <Grid

@@ -10,10 +10,11 @@ import {
     SxProps,
     Typography,
 } from "@mui/material";
-import React from "react";
+import React, { ReactNode } from "react";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
+import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 import { UserStatus } from "@/utils/enums";
 
 interface Props {
@@ -21,23 +22,29 @@ interface Props {
 }
 
 const PlayerCard = ({ player }: Props) => {
-    const [avatarImg, playerUsername, playerEmail, playerStatus, playerCredit] =
-        useAsyncStates({
-            dependents: [player],
-            initialStates: [AVATAR_PLACEHOLDER, "", "", UserStatus.CITIZEN, 0],
-            finalStates: [
-                userAvatarMapping()[player.avatar],
-                player.username,
-                player.email,
-                player.status,
-                player.credit,
-            ],
-        });
+    const [avatarImg, playerUsername, playerEmail, playerStatus, playerCredit] = useAsyncStates({
+        dependents: [player],
+        initialStates: [AVATAR_PLACEHOLDER, "", "", UserStatus.CITIZEN, 0],
+        finalStates: [
+            userAvatarMapping()[player.avatar],
+            player.username,
+            player.email,
+            player.status,
+            player.credit,
+        ],
+    });
 
     const iconSX: SxProps = {
         height: "30px",
         width: "auto",
         m: "auto",
+    };
+
+    const getIconMapping = (status: UserStatus, credit: number): ReactNode => {
+        if (status === UserStatus.BANKER) return <AccountBalanceIcon sx={iconSX} color="success" />;
+        if (status === UserStatus.AWAITING) return <HourglassTopIcon sx={iconSX} color="warning" />;
+        else if (credit < 100) return <SentimentVeryDissatisfiedIcon sx={iconSX} color="error" />;
+        else return <SentimentSatisfiedAltIcon sx={iconSX} color="primary" />;
     };
 
     return (
@@ -46,22 +53,10 @@ const PlayerCard = ({ player }: Props) => {
                 <Avatar src={avatarImg} alt="avatar" />
             </ListItemAvatar>
             <ListItemText
-                primary={
-                    <Typography variant="body1">{playerUsername}</Typography>
-                }
-                secondary={
-                    <Typography variant="body2">{playerEmail}</Typography>
-                }
+                primary={<Typography variant="body1">{playerUsername}</Typography>}
+                secondary={<Typography variant="body2">{playerEmail}</Typography>}
             />
-            <ListItemIcon>
-                {playerStatus === UserStatus.BANKER ? (
-                    <AccountBalanceIcon sx={iconSX} color="success" />
-                ) : playerCredit < 100 ? (
-                    <SentimentVeryDissatisfiedIcon sx={iconSX} color="error" />
-                ) : (
-                    <SentimentSatisfiedAltIcon sx={iconSX} color="primary" />
-                )}
-            </ListItemIcon>
+            <ListItemIcon>{getIconMapping(playerStatus, playerCredit)}</ListItemIcon>
         </ListItem>
     );
 };

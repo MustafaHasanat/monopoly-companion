@@ -1,10 +1,10 @@
-import { GameTemplate, TransactionStatus } from "../enums";
+import { GameEvent, GameTemplateType, TransactionStatus } from "../enums";
 import { TransactionReason } from "../enums";
 
 export type GameType = {
     id: string;
     code: string;
-    template: GameTemplate;
+    template: GameTemplateType;
     banker_id: string;
     created_at: string;
 };
@@ -21,4 +21,35 @@ export type TransactionType = {
     recipient_id: string;
     game_id: string;
     created_at: string;
+};
+
+export type BroadcastPayload<PayloadType> = {
+    event: GameEvent;
+    payload: PayloadType;
+    type: "broadcast";
+};
+
+export type ResponseEventType = {
+    response: "accepted" | "rejected";
+};
+
+export type BankerActionEventType = {
+    kick: {
+        playerId: string;
+        isAll: boolean; // if true, end the game by kicking everyone
+    } | null;
+    setCredit: {
+        playerId: string;
+        credit: number;
+        isAll: boolean; // if true, reset the game by setting everyone's credit to the default
+    } | null;
+    transfer: {
+        playerId: string;
+    } | null;
+};
+
+export type GameTemplate = {
+    type: GameTemplateType;
+    initialCredit: number;
+    roundCredit: number;
 };

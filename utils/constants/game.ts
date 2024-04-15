@@ -1,12 +1,12 @@
-import { GameTemplate } from "../enums";
-import { CordsType, GameType } from "../types";
+import { GameTemplateType } from "../enums";
+import { CordsType, GameTemplate, GameType } from "../types";
 
 export const INITIAL_GAME_DATA: GameType = {
     id: "",
     created_at: "",
     banker_id: "",
     code: "",
-    template: GameTemplate.CLASSIC,
+    template: GameTemplateType.CLASSIC,
 };
 
 export const gameTemplateMapping = () => ({
@@ -34,3 +34,15 @@ export const CONTROLS_ICONS = [
     { path: "history", isBankerOnly: false },
     { path: "manage", isBankerOnly: true },
 ];
+
+export const CLASSIC_GAME: GameTemplate = {
+    type: GameTemplateType.CLASSIC,
+    initialCredit: 1500,
+    roundCredit: 200,
+};
+
+export const MILLIONAIRES_GAME: GameTemplate = {
+    type: GameTemplateType.MILLIONAIRES,
+    initialCredit: 1500000,
+    roundCredit: 2000000,
+};

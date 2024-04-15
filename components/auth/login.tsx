@@ -9,8 +9,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/[locale]/auth/action";
 import { useDispatch } from "react-redux";
-import { controlsSlice } from "@/utils/redux/controls-slice";
 import { loginSchema } from "@/utils/schemas";
+import { snackbarAlert } from "@/utils/helpers";
 
 const Login = () => {
     const { getDictLocales } = useLocale();
@@ -34,26 +34,12 @@ const Login = () => {
         const response = await login(formData);
 
         if (!response.error) {
-            dispatch(
-                controlsSlice.actions.setSnackbarState({
-                    snackbarState: {
-                        message: "Logged in successfully",
-                        severity: "success",
-                    },
-                })
-            );
+            snackbarAlert("Logged in successfully", "success", dispatch);
             setTimeout(() => {
                 router.replace("/lobby");
             }, 1500);
         } else {
-            dispatch(
-                controlsSlice.actions.setSnackbarState({
-                    snackbarState: {
-                        message: response.error.message,
-                        severity: "error",
-                    },
-                })
-            );
+            snackbarAlert(response.error.message, "error", dispatch);
         }
     };
 
@@ -113,13 +99,7 @@ const Login = () => {
                     {auth.login}
                 </ContainedButton>
             </Grid>
-            <Grid
-                item
-                mobile={6}
-                justifyContent="center"
-                alignItems="center"
-                textAlign="start"
-            >
+            <Grid item mobile={6} justifyContent="center" alignItems="center" textAlign="start">
                 <Link href="/">{auth.forgotPass}</Link>
             </Grid>
             <Grid item mobile={6} textAlign="end">

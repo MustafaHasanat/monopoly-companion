@@ -2,7 +2,7 @@
 
 import { Divider, Grid, Typography } from "@mui/material";
 import Main from "../layout/main";
-import { GamePage } from "@/utils/types";
+import { BroadcastPayload, GamePage } from "@/utils/types";
 import { useEffect, useState } from "react";
 import MainWindow from "./mainWindow";
 import HistoryWindow from "./historyWindow";
@@ -13,16 +13,19 @@ import SendWindow from "./sendWindow";
 import useLocale from "@/hooks/useLocale";
 import ControlsPanel from "./controlsPanel";
 import useAuthGuard from "@/hooks/useAuthGuard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectGame } from "@/utils/redux/game-slice";
 import { selectAuth } from "@/utils/redux/auth-slice";
-import { UserStatus } from "@/utils/enums";
+import { GameEvent } from "@/utils/enums";
+import supabaseClient from "@/utils/supabase/client";
+import { broadcastHandler } from "@/utils/helpers";
 
 interface Props {
     page: GamePage;
 }
 
 const WindowController = ({ page }: Props) => {
+    const dispatch = useDispatch();
     const [activePage, setActivePage] = useState(page);
     const { getDictLocales } = useLocale();
     const { game } = getDictLocales();
@@ -30,15 +33,40 @@ const WindowController = ({ page }: Props) => {
     const { user } = useSelector(selectAuth);
     const { isAccessible, loadingComponent } = useAuthGuard({
         page: "game",
-        customCondition:
-            !!gameObj.code &&
-            gameObj.id === user.game_id &&
-            [UserStatus.BANKER, UserStatus.CITIZEN].includes(user.status),
     });
 
     useEffect(() => {
         setActivePage(page);
     }, [page]);
+
+    useEffect(() => {
+        // Subscribe to real-time changes
+        const subscription = supabaseClient
+            .channel(gameObj.code)
+            .on(
+                "broadcast",
+                { event: "*" },
+                async (
+                    payload: Omit<BroadcastPayload<{ message: any }>, "event"> & {
+                        event: string;
+                    },
+                ) => {
+                    await broadcastHandler({
+                        dispatch,
+                        user,
+                        event: payload.event as GameEvent,
+                        payload: payload.payload,
+                        type: payload.type,
+                    });
+                },
+            )
+            .subscribe();
+
+        // Clean up subscription on component unmount
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, [dispatch, gameObj, user]);
 
     const pagesMapping = {
         main: { component: <MainWindow />, title: game.main.title },
@@ -70,9 +98,7 @@ const WindowController = ({ page }: Props) => {
             <ControlsPanel />
 
             <Grid container item justifyContent="center">
-                <Typography variant="h4">
-                    {pagesMapping[activePage].title}
-                </Typography>
+                <Typography variant="h4">{pagesMapping[activePage].title}</Typography>
             </Grid>
 
             <Grid container item justifyContent="center">

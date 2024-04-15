@@ -2,14 +2,9 @@
 
 import { createAdminClient, createClient } from "@/utils/supabase/server";
 import { UserAvatar, UserStatus } from "@/utils/enums";
+import { AdminUserAttributes, UserAttributes } from "@supabase/supabase-js";
 
-export async function login({
-    email,
-    password,
-}: {
-    email: string;
-    password: string;
-}) {
+export async function login({ email, password }: { email: string; password: string }) {
     const supabase = createClient();
 
     const response = await supabase.auth.signInWithPassword({
@@ -55,21 +50,10 @@ export async function logout() {
     return response;
 }
 
-export async function updateUser({
-    status,
-    game_id,
-}: {
-    status: UserStatus;
-    game_id: string | null;
-}) {
+export async function updateUser(attributes: UserAttributes) {
     const supabase = createClient();
 
-    const response = await supabase.auth.updateUser({
-        data: {
-            status,
-            game_id,
-        },
-    });
+    const response = await supabase.auth.updateUser(attributes);
 
     return response;
 }
@@ -78,6 +62,14 @@ export async function getUserById({ id }: { id: string }) {
     const supabase = createAdminClient();
 
     const response = await supabase.auth.admin.getUserById(id);
+
+    return response;
+}
+
+export async function updateUserById(id: string, attributes: UserAttributes) {
+    const supabase = createAdminClient();
+
+    const response = await supabase.auth.admin.updateUserById(id, attributes);
 
     return response;
 }

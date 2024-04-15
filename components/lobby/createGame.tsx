@@ -7,23 +7,18 @@ import useLocale from "@/hooks/useLocale";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { SelectBox } from "../shared/form";
 import GamepadTwoToneIcon from "@mui/icons-material/GamepadTwoTone";
-import { GameTemplate } from "@/utils/enums";
+import { GameTemplateType } from "@/utils/enums";
 import { gameTemplateMapping } from "@/utils/constants";
 import { createNewGame } from "@/app/[locale]/lobby/action";
 import { useRouter } from "next/navigation";
 import { CordsType } from "@/utils/types";
 import { LOBBY_CORDS } from "@/utils/constants/game";
-import { startTheGameProcess } from "@/utils/helpers";
+import { snackbarAlert, startTheGameProcess } from "@/utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
-import { controlsSlice } from "@/utils/redux/controls-slice";
 import { createGameSchema } from "@/utils/schemas";
 
-const CreateGame = ({
-    setCords,
-}: {
-    setCords: Dispatch<SetStateAction<CordsType>>;
-}) => {
+const CreateGame = ({ setCords }: { setCords: Dispatch<SetStateAction<CordsType>> }) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
     const router = useRouter();
@@ -37,25 +32,18 @@ const CreateGame = ({
     } = useForm({
         resolver: yupResolver(createGameSchema),
         defaultValues: {
-            template: GameTemplate.CLASSIC,
+            template: GameTemplateType.CLASSIC,
         },
     });
 
     const onSubmit = async (formData: { template: string }) => {
-        const { response, codeResponse } = await createNewGame({
+        const response = await createNewGame({
             template: formData.template,
             banker_id: user.id,
         });
 
         if (!response.error) {
-            dispatch(
-                controlsSlice.actions.setSnackbarState({
-                    snackbarState: {
-                        message: "Game is created successfully",
-                        severity: "success",
-                    },
-                })
-            );
+            snackbarAlert("Game is created successfully", "success", dispatch);
             // start the game
             await startTheGameProcess({
                 user,
@@ -67,14 +55,7 @@ const CreateGame = ({
                 router.replace("/game");
             }, 1500);
         } else {
-            dispatch(
-                controlsSlice.actions.setSnackbarState({
-                    snackbarState: {
-                        message: response.error.message,
-                        severity: "error",
-                    },
-                })
-            );
+            snackbarAlert(response.error.message, "error", dispatch);
         }
     };
 
@@ -91,12 +72,7 @@ const CreateGame = ({
             p={{ mobile: "20px" }}
         >
             <Grid container item mobile={12}>
-                <Typography
-                    m="auto"
-                    variant="h4"
-                    width="80%"
-                    textAlign="center"
-                >
+                <Typography m="auto" variant="h4" width="80%" textAlign="center">
                     {lobby.create.title}
                 </Typography>
             </Grid>
@@ -108,10 +84,10 @@ const CreateGame = ({
                     render={({ field }) => (
                         <SelectBox
                             {...field}
-                            initialValue={GameTemplate.CLASSIC}
-                            defaultValue={GameTemplate.CLASSIC}
+                            initialValue={GameTemplateType.CLASSIC}
+                            defaultValue={GameTemplateType.CLASSIC}
                             label={lobby.create.template}
-                            values={Object.values(GameTemplate)}
+                            values={Object.values(GameTemplateType)}
                             labels={Object.values(gameTemplateMapping())}
                             helperText={errors.template?.message}
                             error={!!errors.template}

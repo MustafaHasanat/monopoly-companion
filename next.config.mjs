@@ -26,7 +26,7 @@ const nextConfig = {
             },
             {
                 source: "/lobby",
-                destination: "/en/lobby",
+                destination: "/en/lobby?active=start",
                 permanent: false,
             },
             {

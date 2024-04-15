@@ -13,14 +13,11 @@ import { ContainedButton } from "../shared/button";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { sendCredit } from "@/app/[locale]/game/action";
-import { controlsSlice } from "@/utils/redux/controls-slice";
 import { useEffect, useState } from "react";
 import { selectGame } from "@/utils/redux/game-slice";
+import { snackbarAlert } from "@/utils/helpers";
 
-export type PartialPlayer = Omit<
-    Player,
-    "created_at" | "avatar" | "credit" | "status" | "game_id"
->;
+export type PartialPlayer = Omit<Player, "created_at" | "avatar" | "credit" | "status" | "game_id">;
 
 const SendWindow = () => {
     const { getDictLocales } = useLocale();
@@ -53,23 +50,22 @@ const SendWindow = () => {
     const {
         recipientsIds,
         recipientsNames,
-    }: { recipientsIds: string[]; recipientsNames: string[] } =
-        currentRecipients.reduce(
-            (
-                acc: {
-                    recipientsIds: string[];
-                    recipientsNames: string[];
-                },
-                current: PartialPlayer
-            ) => ({
-                recipientsIds: [...acc.recipientsIds, current.id],
-                recipientsNames: [...acc.recipientsNames, current.username],
-            }),
-            {
-                recipientsIds: [],
-                recipientsNames: [],
-            }
-        );
+    }: { recipientsIds: string[]; recipientsNames: string[] } = currentRecipients.reduce(
+        (
+            acc: {
+                recipientsIds: string[];
+                recipientsNames: string[];
+            },
+            current: PartialPlayer,
+        ) => ({
+            recipientsIds: [...acc.recipientsIds, current.id],
+            recipientsNames: [...acc.recipientsNames, current.username],
+        }),
+        {
+            recipientsIds: [],
+            recipientsNames: [],
+        },
+    );
 
     const {
         control,
@@ -90,11 +86,7 @@ const SendWindow = () => {
         setRecipient(getRecipientById(watch("recipient"))[0]);
     }, [watch]);
 
-    const onSubmit = async (formData: {
-        recipient: string;
-        reason: string;
-        amount: number;
-    }) => {
+    const onSubmit = async (formData: { recipient: string; reason: string; amount: number }) => {
         console.log(formData);
 
         await sendCredit({
@@ -107,24 +99,14 @@ const SendWindow = () => {
             },
         })
             .then((data) => {
-                dispatch(
-                    controlsSlice.actions.setSnackbarState({
-                        snackbarState: {
-                            message: `${formData.amount}$ was sent to ${recipient.username}`,
-                            severity: "success",
-                        },
-                    })
+                snackbarAlert(
+                    `${formData.amount}$ was sent to ${recipient.username}`,
+                    "success",
+                    dispatch,
                 );
             })
             .catch((error) => {
-                dispatch(
-                    controlsSlice.actions.setSnackbarState({
-                        snackbarState: {
-                            message: "Error occurred",
-                            severity: "error",
-                        },
-                    })
-                );
+                snackbarAlert("Error occurred", "error", dispatch);
             });
     };
 

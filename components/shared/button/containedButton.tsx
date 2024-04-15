@@ -27,7 +27,7 @@ export const ContainedButton = ({
                 ":hover": {
                     color: theme.palette.primary.dark,
                     backgroundColor: theme.palette.secondary.main,
-                    boxShadow: `0px 0px 15px 5px ${theme.palette.primary.main}`,
+                    boxShadow: `0px 0px 7px 2px ${theme.palette.primary.main}`,
                 },
                 ...sx,
             }}

@@ -72,6 +72,12 @@ const ar = {
         bank: "Bank",
         status: "Status",
         name: "Name",
+        statusValues: {
+            banker: "Banker",
+            citizen: "Citizen",
+            ghost: "Ghost",
+            awaiting: "Awaiting",
+        },
         reasons: {
             rent: "Rent",
             buy: "Buy",

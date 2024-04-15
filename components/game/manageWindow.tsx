@@ -15,14 +15,18 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Stack, useTheme } from "@mui/material";
 import { ContainedButton } from "../shared/button";
 import PowerSettingsNewRoundedIcon from "@mui/icons-material/PowerSettingsNewRounded";
-import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
-import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
-import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
+import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
+import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
+import { useSelector } from "react-redux";
+import { selectGame } from "@/utils/redux/game-slice";
+import { Player } from "@/utils/types";
 
 const ManageWindow = () => {
     const { getDictLocales } = useLocale();
     const { game } = getDictLocales();
     const theme = useTheme();
+    const { game: gameObj, players } = useSelector(selectGame);
 
     const requestActions = (playerId: string): ReactNode => (
         <Stack
@@ -62,35 +66,27 @@ const ManageWindow = () => {
         },
     ];
 
-    const rows: {
-        name: string;
-        status: UserStatus;
-        actions: ReactNode;
-    }[] = [
-        {
-            name: "Jack",
-            status: UserStatus.BANKER,
+    const getRows = () =>
+        players.map((player) => ({
+            username: player.username,
+            status: player.status,
             actions: requestActions(""),
-        },
-        {
-            name: "Mike",
-            status: UserStatus.CITIZEN,
-            actions: requestActions(""),
-        },
-    ];
+        }));
 
     const getCellValue = (key: string, value: any): ReactNode => {
-        if (key === "name") return value;
-        else if (key === "status") return value;
+        if (key === "username") return value;
+        else if (key === "status") return game.statusValues[value as UserStatus];
         else return value;
     };
 
     return (
         <>
+            {/* players section title */}
             <Grid container item justifyContent="center">
                 <Typography variant="h5">{game.manage.players}</Typography>
             </Grid>
 
+            {/* players list */}
             <Grid container item justifyContent="center">
                 <Paper sx={{ width: "100%", overflow: "hidden" }}>
                     <TableContainer sx={{ maxHeight: 440 }}>
@@ -110,7 +106,7 @@ const ManageWindow = () => {
                             </TableHead>
 
                             <TableBody>
-                                {rows.map((row, index) => {
+                                {getRows().map((row, index) => {
                                     return (
                                         <TableRow
                                             hover
@@ -141,6 +137,7 @@ const ManageWindow = () => {
                 </Paper>
             </Grid>
 
+            {/* controls section title */}
             <Grid container item justifyContent="center">
                 <Typography variant="h5">{game.manage.controls}</Typography>
             </Grid>

@@ -9,8 +9,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { login, register } from "@/app/[locale]/auth/action";
 import { useDispatch } from "react-redux";
-import { controlsSlice } from "@/utils/redux/controls-slice";
 import { registerSchema } from "@/utils/schemas";
+import { snackbarAlert } from "@/utils/helpers";
 
 const Register = () => {
     const { getDictLocales } = useLocale();
@@ -32,55 +32,23 @@ const Register = () => {
         },
     });
 
-    const onSubmit = async (formData: {
-        email: string;
-        password: string;
-        username: string;
-    }) => {
+    const onSubmit = async (formData: { email: string; password: string; username: string }) => {
         const response = await register(formData);
 
         if (!response.error) {
-            dispatch(
-                controlsSlice.actions.setSnackbarState({
-                    snackbarState: {
-                        message: "User is created, logging you in ..",
-                        severity: "success",
-                    },
-                })
-            );
+            snackbarAlert("User is created, logging you in ..", "success", dispatch);
             const loginResponse = await login(formData);
 
             if (!loginResponse.error) {
-                dispatch(
-                    controlsSlice.actions.setSnackbarState({
-                        snackbarState: {
-                            message: "Logged in successfully",
-                            severity: "success",
-                        },
-                    })
-                );
+                snackbarAlert("Logged in successfully", "success", dispatch);
                 setTimeout(() => {
                     router.replace("/lobby");
                 }, 1500);
             } else {
-                dispatch(
-                    controlsSlice.actions.setSnackbarState({
-                        snackbarState: {
-                            message: loginResponse.error.message,
-                            severity: "error",
-                        },
-                    })
-                );
+                snackbarAlert(loginResponse.error.message, "error", dispatch);
             }
         } else {
-            dispatch(
-                controlsSlice.actions.setSnackbarState({
-                    snackbarState: {
-                        message: response.error.message,
-                        severity: "error",
-                    },
-                })
-            );
+            snackbarAlert(response.error.message, "error", dispatch);
         }
     };
 

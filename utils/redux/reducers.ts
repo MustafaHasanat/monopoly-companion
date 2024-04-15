@@ -39,7 +39,7 @@ const controlsPersistConfig = {
 const gamePersistConfig = {
     key: "game",
     storage,
-    whitelist: ["game"],
+    whitelist: ["game", "players"],
 };
 
 const authPersistReducer = persistReducer(authPersistConfig, authSlice.reducer);

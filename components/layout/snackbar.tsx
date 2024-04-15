@@ -1,6 +1,7 @@
 "use client";
 
-import { controlsSlice, selectControls } from "@/utils/redux/controls-slice";
+import { snackbarAlert } from "@/utils/helpers";
+import { selectControls } from "@/utils/redux/controls-slice";
 import { Alert, AlertColor, Slide, SlideProps, Snackbar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,14 +14,7 @@ const SnackbarWrapper = () => {
     };
 
     const handleClose = () => {
-        dispatch(
-            controlsSlice.actions.setSnackbarState({
-                snackbarState: {
-                    message: "none",
-                    severity: "success",
-                },
-            })
-        );
+        snackbarAlert("none", "success", dispatch);
     };
 
     return (

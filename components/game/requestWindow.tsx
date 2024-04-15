@@ -9,10 +9,10 @@ import { SelectBox, TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
 import { ContainedButton } from "../shared/button";
 import { useDispatch, useSelector } from "react-redux";
-import { controlsSlice } from "@/utils/redux/controls-slice";
 import { requestCredit } from "@/app/[locale]/game/action";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
+import { snackbarAlert } from "@/utils/helpers";
 
 const RequestWindow = () => {
     const { getDictLocales } = useLocale();
@@ -39,24 +39,10 @@ const RequestWindow = () => {
 
         await requestCredit({})
             .then((data) => {
-                dispatch(
-                    controlsSlice.actions.setSnackbarState({
-                        snackbarState: {
-                            message: "Request has been sent",
-                            severity: "success",
-                        },
-                    })
-                );
+                snackbarAlert("Request has been sent", "success", dispatch);
             })
             .catch((error) => {
-                dispatch(
-                    controlsSlice.actions.setSnackbarState({
-                        snackbarState: {
-                            message: "Error occurred",
-                            severity: "error",
-                        },
-                    })
-                );
+                snackbarAlert("Error occurred", "error", dispatch);
             });
     };
 

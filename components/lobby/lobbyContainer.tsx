@@ -7,32 +7,26 @@ import useAuthGuard from "@/hooks/useAuthGuard";
 import { LOBBY_CORDS } from "@/utils/constants/game";
 import { UserStatus } from "@/utils/enums";
 import { selectAuth } from "@/utils/redux/auth-slice";
-import { selectGame } from "@/utils/redux/game-slice";
-import { CordsType } from "@/utils/types";
+import { CordsType, LobbyPage } from "@/utils/types";
 import { Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const LobbyContainer = () => {
-    const { game } = useSelector(selectGame);
+interface Props {
+    page: LobbyPage;
+}
+
+const LobbyContainer = ({ page }: Props) => {
     const { user } = useSelector(selectAuth);
     const { isAccessible, loadingComponent } = useAuthGuard({
         page: "lobby",
-        customCondition: [UserStatus.AWAITING, UserStatus.GHOST].includes(
-            user.status
-        ),
-        // !!!game.code && [UserStatus.AWAITING].includes(user.status),
     });
 
-    const [cords, setCords] = useState<CordsType>({
-        x: 0,
-        y: 1,
-    });
+    const [cords, setCords] = useState<CordsType>(LOBBY_CORDS[page]);
 
     useEffect(() => {
-        if (user.status === UserStatus.AWAITING) {
-            setCords(LOBBY_CORDS.waiting);
-        }
+        user.status === UserStatus.AWAITING && setCords(LOBBY_CORDS.waiting);
+        user.status === UserStatus.GHOST && setCords(LOBBY_CORDS.start);
     }, [user.status]);
 
     return !isAccessible ? (

@@ -5,14 +5,7 @@ import useAsyncStates from "@/hooks/useAsyncStates";
 import { AVATAR_PLACEHOLDER, userAvatarMapping } from "@/utils/constants";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
-import {
-    Avatar,
-    Divider,
-    Grid,
-    List,
-    Typography,
-    useTheme,
-} from "@mui/material";
+import { Avatar, Divider, Grid, List, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { ContainedButton } from "../shared/button";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
@@ -20,15 +13,13 @@ import PowerSettingsNewRoundedIcon from "@mui/icons-material/PowerSettingsNewRou
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import { UserStatus } from "@/utils/enums";
-import { controlsSlice } from "@/utils/redux/controls-slice";
-import { endTheGameProcess } from "@/utils/helpers";
+import { endTheGameProcess, snackbarAlert } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import React from "react";
 import PlayerCard from "./playerCard";
-import { endSubscription } from "@/app/[locale]/game/action";
 
 const MainWindow = () => {
-    const { game: gameObj } = useSelector(selectGame);
+    const { game: gameObj, players } = useSelector(selectGame);
     const { user } = useSelector(selectAuth);
     const dispatch = useDispatch();
     const { getDictLocales } = useLocale();
@@ -36,18 +27,17 @@ const MainWindow = () => {
     const theme = useTheme();
     const router = useRouter();
 
-    const [avatarImg, username, userCredit, userStatus, gameCode] =
-        useAsyncStates({
-            dependents: [user, gameObj],
-            initialStates: [AVATAR_PLACEHOLDER, "", 0, UserStatus.GHOST, ""],
-            finalStates: [
-                userAvatarMapping()[user.avatar],
-                user.username,
-                user.credit,
-                user.status,
-                gameObj.code,
-            ],
-        });
+    const [avatarImg, username, userCredit, userStatus, gameCode] = useAsyncStates({
+        dependents: [user, gameObj],
+        initialStates: [AVATAR_PLACEHOLDER, "", 0, UserStatus.GHOST, ""],
+        finalStates: [
+            userAvatarMapping()[user.avatar],
+            user.username,
+            user.credit,
+            user.status,
+            gameObj.code,
+        ],
+    });
 
     const handleRedButton = async () => {
         userStatus === UserStatus.BANKER;
@@ -66,7 +56,7 @@ const MainWindow = () => {
             const joinMessage =
                 `Join me on Monopoly Companion with code: ${gameCode}. Following this link: ${joinLink}`.replaceAll(
                     " ",
-                    "%20"
+                    "%20",
                 );
             const whatsappURL = `https://wa.me/?text=${joinMessage}`;
 
@@ -77,15 +67,7 @@ const MainWindow = () => {
     const handleCopyButton = () => {
         if (navigator) {
             navigator.clipboard.writeText(gameCode);
-
-            dispatch(
-                controlsSlice.actions.setSnackbarState({
-                    snackbarState: {
-                        message: "Copied to clipboard!",
-                        severity: "success",
-                    },
-                })
-            );
+            snackbarAlert("Copied to clipboard!", "success", dispatch);
         }
     };
 
@@ -142,23 +124,7 @@ const MainWindow = () => {
                         bgcolor: "background.paper",
                     }}
                 >
-                    {[
-                        user,
-                        {
-                            ...user,
-                            status: UserStatus.CITIZEN,
-                        },
-                        {
-                            ...user,
-                            status: UserStatus.CITIZEN,
-                            credit: 1000,
-                        },
-                        {
-                            ...user,
-                            status: UserStatus.CITIZEN,
-                            credit: 1000,
-                        },
-                    ].map((player, index) => (
+                    {players.map((player, index) => (
                         <React.Fragment key={`player item: ${index}`}>
                             <PlayerCard player={player} />
                         </React.Fragment>
@@ -224,9 +190,7 @@ const MainWindow = () => {
                         backgroundColor: theme.palette.error.main,
                     }}
                 >
-                    {userStatus === UserStatus.BANKER
-                        ? game.main.end
-                        : game.main.leave}
+                    {userStatus === UserStatus.BANKER ? game.main.end : game.main.leave}
                 </ContainedButton>
             </Grid>
         </>

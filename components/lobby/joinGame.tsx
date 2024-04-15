@@ -1,3 +1,5 @@
+"use client";
+
 import { Grid, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import { ContainedButton } from "../shared/button";
@@ -10,11 +12,11 @@ import { TextFieldForm } from "../shared/form";
 import { getGameByCode } from "@/app/[locale]/game/action";
 import { CordsType } from "@/utils/types";
 import { LOBBY_CORDS } from "@/utils/constants/game";
-import { useDispatch } from "react-redux";
-import { controlsSlice } from "@/utils/redux/controls-slice";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "next/navigation";
 import { joinGameSchema } from "@/utils/schemas";
-import { joinTheGameProcess } from "@/utils/helpers/game";
+import { joinTheGameProcess, snackbarAlert } from "@/utils/helpers";
+import { selectAuth } from "@/utils/redux/auth-slice";
 
 interface Props {
     setCords: Dispatch<SetStateAction<CordsType>>;
@@ -26,6 +28,7 @@ const JoinGame = ({ setCords }: Props) => {
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
     const code = searchParams.get("code");
+    const { user } = useSelector(selectAuth);
 
     const {
         control,
@@ -45,40 +48,22 @@ const JoinGame = ({ setCords }: Props) => {
 
         if (!response.error) {
             if (response?.data.length !== 0) {
-                dispatch(
-                    controlsSlice.actions.setSnackbarState({
-                        snackbarState: {
-                            message: "Correct game code, join request is sent",
-                            severity: "success",
-                        },
-                    })
-                );
-                // send a request to join the game
+                // start the joining process
                 await joinTheGameProcess({
                     game: response.data[0],
+                    user,
                     dispatch,
                 });
                 setCords(LOBBY_CORDS.waiting);
             } else {
-                dispatch(
-                    controlsSlice.actions.setSnackbarState({
-                        snackbarState: {
-                            message:
-                                "Wrong game code or game doesn't exist, try again",
-                            severity: "error",
-                        },
-                    })
+                snackbarAlert(
+                    "Wrong game code or game doesn't exist, try again",
+                    "error",
+                    dispatch,
                 );
             }
         } else {
-            dispatch(
-                controlsSlice.actions.setSnackbarState({
-                    snackbarState: {
-                        message: response.error.message,
-                        severity: "error",
-                    },
-                })
-            );
+            snackbarAlert(response.error.message, "error", dispatch);
         }
     };
 
@@ -95,12 +80,7 @@ const JoinGame = ({ setCords }: Props) => {
             p={{ mobile: "20px" }}
         >
             <Grid container item mobile={12}>
-                <Typography
-                    m="auto"
-                    variant="h4"
-                    width="80%"
-                    textAlign="center"
-                >
+                <Typography m="auto" variant="h4" width="80%" textAlign="center">
                     {lobby.join.title}
                 </Typography>
             </Grid>

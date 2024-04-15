@@ -2,8 +2,13 @@
 
 import Main from "@/components/layout/main";
 import LobbyContainer from "@/components/lobby/lobbyContainer";
+import { LobbyPage } from "@/utils/types";
+import { useSearchParams } from "next/navigation";
 
 export default function Lobby() {
+    const searchParams = useSearchParams();
+    const activePage: LobbyPage = searchParams.get("active") as LobbyPage;
+
     return (
         <Main
             sx={{
@@ -14,7 +19,7 @@ export default function Lobby() {
                 p: 0,
             }}
         >
-            <LobbyContainer />
+            <LobbyContainer page={activePage || "start"} />
         </Main>
     );
 }

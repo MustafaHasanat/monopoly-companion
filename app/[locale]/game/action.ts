@@ -30,12 +30,6 @@ export async function endTheGame({ code }: { code: string }) {
     return response;
 }
 
-// unsubscribe from real-time db
-export async function endSubscription() {
-    const supabase = createClient();
-    await supabase.removeAllChannels();
-}
-
 export async function sendCredit({
     game: { banker_id, id: game_id, code },
     transaction: { amount, reason, recipient_id, sender_id },
@@ -44,14 +38,6 @@ export async function sendCredit({
     transaction: PartialTransaction;
 }) {
     const supabase = createClient();
-
-    // const response = await supabase.auth.updateUser({
-    //     email,
-    //     data: {
-    //         username,
-    //         avatar,
-    //     },
-    // });
 
     const transactionResponse = await supabase
         .from("transaction")
