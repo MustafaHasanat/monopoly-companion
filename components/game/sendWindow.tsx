@@ -22,7 +22,7 @@ export type PartialPlayer = Omit<Player, "created_at" | "avatar" | "credit" | "s
 const SendWindow = () => {
     const { getDictLocales } = useLocale();
     const { game } = getDictLocales();
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
     const { game: gameObj } = useSelector(selectGame);
     const dispatch = useDispatch();
 
@@ -95,7 +95,7 @@ const SendWindow = () => {
                 amount: watch("amount"),
                 reason: watch("reason"),
                 recipient_id: watch("recipient"),
-                sender_id: user.id,
+                sender_id: player.id,
             },
         })
             .then((data) => {

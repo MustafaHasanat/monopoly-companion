@@ -21,7 +21,6 @@ import { endTheGameProcess } from "@/utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { selectGame } from "@/utils/redux/game-slice";
 import { selectAuth } from "@/utils/redux/auth-slice";
-import { endSubscription } from "@/app/[locale]/game/action";
 
 interface Props {
     boxIsOpen: boolean;
@@ -46,8 +45,8 @@ const NavItems = ({ boxIsOpen, setBoxIsOpen }: Props) => {
     const { getDictLocales } = useLocale();
     const { header } = getDictLocales();
     const dispatch = useDispatch();
-    const { game } = useSelector(selectGame);
-    const { user, session } = useSelector(selectAuth);
+    const { game, players } = useSelector(selectGame);
+    const { player, session } = useSelector(selectAuth);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
@@ -61,9 +60,10 @@ const NavItems = ({ boxIsOpen, setBoxIsOpen }: Props) => {
     const handleLogout = async () => {
         setBoxIsOpen(false);
         await endTheGameProcess({
-            user,
+            player,
             game,
             dispatch,
+            currentPlayers: players,
         });
         // log out the user and redirect them
         logout();

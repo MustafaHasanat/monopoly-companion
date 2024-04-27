@@ -5,7 +5,7 @@ import StartGame from "@/components/lobby/startGame";
 import WaitingGame from "@/components/lobby/waitingGame";
 import useAuthGuard from "@/hooks/useAuthGuard";
 import { LOBBY_CORDS } from "@/utils/constants/game";
-import { UserStatus } from "@/utils/enums";
+import { PlayerStatus } from "@/utils/enums";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { CordsType, LobbyPage } from "@/utils/types";
 import { Container } from "@mui/material";
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const LobbyContainer = ({ page }: Props) => {
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
     const { isAccessible, loadingComponent } = useAuthGuard({
         page: "lobby",
     });
@@ -25,9 +25,9 @@ const LobbyContainer = ({ page }: Props) => {
     const [cords, setCords] = useState<CordsType>(LOBBY_CORDS[page]);
 
     useEffect(() => {
-        user.status === UserStatus.AWAITING && setCords(LOBBY_CORDS.waiting);
-        user.status === UserStatus.GHOST && setCords(LOBBY_CORDS.start);
-    }, [user.status]);
+        player.status === PlayerStatus.AWAITING && setCords(LOBBY_CORDS.waiting);
+        player.status === PlayerStatus.GHOST && setCords(LOBBY_CORDS.start);
+    }, [player.status]);
 
     return !isAccessible ? (
         loadingComponent

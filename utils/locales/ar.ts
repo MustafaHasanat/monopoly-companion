@@ -119,6 +119,8 @@ const ar = {
             active: "Active",
             broke: "Broke",
             kick: "Kick out",
+            accept: "Accept",
+            reject: "Reject",
             controls: "Controls",
             actions: "Actions",
             endButton: "End the game for all",

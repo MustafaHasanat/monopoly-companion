@@ -2,7 +2,7 @@
 
 import { Grid, Typography } from "@mui/material";
 import useLocale from "@/hooks/useLocale";
-import { UserStatus } from "@/utils/enums";
+import { PlayerStatus } from "@/utils/enums";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,8 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { ReactNode } from "react";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { Stack, useTheme } from "@mui/material";
+import {  useTheme } from "@mui/material";
 import { ContainedButton } from "../shared/button";
 import PowerSettingsNewRoundedIcon from "@mui/icons-material/PowerSettingsNewRounded";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
@@ -20,36 +19,15 @@ import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
 import { useSelector } from "react-redux";
 import { selectGame } from "@/utils/redux/game-slice";
-import { Player } from "@/utils/types";
+import { selectAuth } from "@/utils/redux/auth-slice";
+import ManagerButtons from "./components/managerButtons";
 
 const ManageWindow = () => {
     const { getDictLocales } = useLocale();
     const { game } = getDictLocales();
     const theme = useTheme();
-    const { game: gameObj, players } = useSelector(selectGame);
-
-    const requestActions = (playerId: string): ReactNode => (
-        <Stack
-            direction="row"
-            p="auto"
-            m="auto"
-            justifyContent="center"
-            alignItems="center"
-            width="fit-content"
-        >
-            <ContainedButton
-                startIcon={<CloseOutlinedIcon />}
-                onClick={() => {}}
-                sx={{
-                    width: "fit-content",
-                    p: "5px 10px",
-                    backgroundColor: theme.palette.error.main,
-                }}
-            >
-                {"Kick out"}
-            </ContainedButton>
-        </Stack>
-    );
+    const { players } = useSelector(selectGame);
+    const { player: playerObj } = useSelector(selectAuth);
 
     const columns: readonly {
         label: "name" | "status" | "actions";
@@ -67,15 +45,17 @@ const ManageWindow = () => {
     ];
 
     const getRows = () =>
-        players.map((player) => ({
-            username: player.username,
-            status: player.status,
-            actions: requestActions(""),
-        }));
+        players
+            .filter((player) => player.id !== playerObj.id)
+            .map((player) => ({
+                username: player.username,
+                status: player.status,
+                actions: <ManagerButtons player={player} />,
+            }));
 
     const getCellValue = (key: string, value: any): ReactNode => {
         if (key === "username") return value;
-        else if (key === "status") return game.statusValues[value as UserStatus];
+        else if (key === "status") return game.statusValues[value as PlayerStatus];
         else return value;
     };
 

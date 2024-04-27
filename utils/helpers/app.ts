@@ -1,5 +1,5 @@
 import { Dispatch, UnknownAction } from "redux";
-import { controlsSlice } from "../redux/controls-slice";
+import { setSnackbarState } from "../redux/controls-slice";
 import { AlertColor } from "@mui/material";
 
 export const snackbarAlert = (
@@ -8,7 +8,7 @@ export const snackbarAlert = (
     dispatch: Dispatch<UnknownAction>,
 ) => {
     dispatch(
-        controlsSlice.actions.setSnackbarState({
+        setSnackbarState({
             snackbarState: {
                 message,
                 severity,

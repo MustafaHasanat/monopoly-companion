@@ -2,9 +2,10 @@
 "use client";
 
 import useLocale from "@/hooks/useLocale";
-import { UserStatus } from "@/utils/enums";
-import { normalizeUser } from "@/utils/helpers";
-import { authSlice, selectAuth } from "@/utils/redux/auth-slice";
+import { PlayerStatus } from "@/utils/enums";
+import { normalizeRemotePlayer } from "@/utils/helpers";
+import { refetchUserData } from "@/utils/helpers/auth";
+import { selectAuth, setSession, setPlayer } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
 import { Grid } from "@mui/material";
 import { Session, User } from "@supabase/supabase-js";
@@ -14,31 +15,39 @@ import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
     children: ReactNode;
-    user: User | null;
+    remotePlayer: User | null;
     session: Session | null;
 }
 
-const Body = ({ children, user, session }: Props) => {
+const Body = ({ children, remotePlayer, session }: Props) => {
     const { getLocale } = useLocale();
     const locale = getLocale();
     const dispatch = useDispatch();
     const router = useRouter();
     const pathname = usePathname();
     const { game } = useSelector(selectGame);
-    const { user: player } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
 
     useEffect(() => {
-        const player = normalizeUser(user);
-        dispatch(authSlice.actions.setUser({ user: player }));
-        dispatch(authSlice.actions.setSession({ session }));
-    }, [user, session]);
+        const player = normalizeRemotePlayer(remotePlayer);
+        dispatch(setPlayer({ player }));
+        dispatch(setSession({ session }));
+    }, [remotePlayer, session]);
+
+    useEffect(() => {
+        const getData = async () => {
+            const upToDatePlayer = await refetchUserData();
+            dispatch(setPlayer({ player: upToDatePlayer }));
+        };
+        getData();
+    }, [player.status, player.credit, player.game_id]);
 
     useEffect(() => {
         if (
             session?.access_token &&
             game.code &&
             player.game_id &&
-            [UserStatus.BANKER, UserStatus.CITIZEN].includes(player.status) &&
+            [PlayerStatus.BANKER, PlayerStatus.CITIZEN].includes(player.status) &&
             !pathname.includes("game")
         ) {
             router.replace("game");

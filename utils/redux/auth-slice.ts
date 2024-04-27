@@ -4,12 +4,12 @@ import { Session } from "@supabase/supabase-js";
 import { INITIAL_PLAYER_DATA } from "../constants";
 
 interface initialStateProps {
-    user: Player;
+    player: Player;
     session: null | Session;
 }
 
 const initialState: initialStateProps = {
-    user: INITIAL_PLAYER_DATA,
+    player: INITIAL_PLAYER_DATA,
     session: null,
 };
 
@@ -17,30 +17,30 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setUser: (
-            state: { user: Player },
-            { payload: { user } }: StorePayload<{ user: Player }>
+        setPlayer: (
+            state: { player: Player },
+            { payload: { player } }: StorePayload<{ player: Player }>,
         ) => {
-            state.user = user;
+            state.player = player;
         },
-        updateUser: (
-            state: { user: Player },
-            { payload: { user } }: StorePayload<{ user: Partial<Player> }>
+        updatePlayer: (
+            state: { player: Player },
+            { payload: { player } }: StorePayload<{ player: Partial<Player> }>,
         ) => {
-            state.user = {
-                ...state.user,
-                ...user,
+            state.player = {
+                ...state.player,
+                ...player,
             };
         },
         setSession: (
             state: { session: null | Session },
-            { payload: { session } }: StorePayload<{ session: null | Session }>
+            { payload: { session } }: StorePayload<{ session: null | Session }>,
         ) => {
             state.session = session;
         },
     },
 });
 
-export const { setUser, setSession, updateUser } = authSlice.actions;
+export const { setPlayer, setSession, updatePlayer } = authSlice.actions;
 
 export const selectAuth = (state: { auth: initialStateProps }) => state.auth;

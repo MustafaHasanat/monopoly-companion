@@ -1,7 +1,7 @@
 "use client";
 
 import useLocale from "@/hooks/useLocale";
-import { TransactionReason, UserAvatar, UserStatus } from "@/utils/enums";
+import { TransactionReason, PlayerAvatar, PlayerStatus } from "@/utils/enums";
 import { Player } from "@/utils/types";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -84,9 +84,9 @@ const BankWindow = () => {
                 created_at: "",
                 username: "Mark",
                 email: "",
-                avatar: UserAvatar.M1,
+                avatar: PlayerAvatar.M1,
                 credit: 0,
-                status: UserStatus.GHOST,
+                status: PlayerStatus.GHOST,
                 game_id: "",
             },
             amount: 200,

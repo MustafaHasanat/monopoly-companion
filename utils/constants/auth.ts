@@ -1,4 +1,4 @@
-import { UserAvatar, UserStatus } from "../enums";
+import { PlayerAvatar, PlayerStatus } from "../enums";
 import { Player } from "../types";
 
 export const INITIAL_PLAYER_DATA: Player = {
@@ -6,15 +6,15 @@ export const INITIAL_PLAYER_DATA: Player = {
     created_at: "",
     username: "",
     email: "",
-    avatar: UserAvatar.M1,
+    avatar: PlayerAvatar.M1,
     credit: 0,
-    status: UserStatus.GHOST,
+    status: PlayerStatus.GHOST,
     game_id: "",
 };
 
 export const AVATAR_PLACEHOLDER = "/images/avatar-placeholder.png"
 
-export const userAvatarMapping = (isSelect = false) => ({
+export const playerAvatarMapping = (isSelect = false) => ({
     M1: isSelect ? "Man 1" : "/images/M1.jpg",
     M2: isSelect ? "Man 2" : "/images/M2.jpg",
     M3: isSelect ? "Man 3" : "/images/M3.jpg",

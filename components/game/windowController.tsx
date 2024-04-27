@@ -30,7 +30,7 @@ const WindowController = ({ page }: Props) => {
     const { getDictLocales } = useLocale();
     const { game } = getDictLocales();
     const { game: gameObj } = useSelector(selectGame);
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
     const { isAccessible, loadingComponent } = useAuthGuard({
         page: "game",
     });
@@ -53,7 +53,8 @@ const WindowController = ({ page }: Props) => {
                 ) => {
                     await broadcastHandler({
                         dispatch,
-                        user,
+                        player,
+                        game: gameObj,
                         event: payload.event as GameEvent,
                         payload: payload.payload,
                         type: payload.type,
@@ -66,7 +67,7 @@ const WindowController = ({ page }: Props) => {
         return () => {
             subscription.unsubscribe();
         };
-    }, [dispatch, gameObj, user]);
+    }, [dispatch, gameObj, player]);
 
     const pagesMapping = {
         main: { component: <MainWindow />, title: game.main.title },

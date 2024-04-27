@@ -1,4 +1,4 @@
-import { UserAvatar } from "@/utils/enums";
+import { PlayerAvatar } from "@/utils/enums";
 import * as yup from "yup";
 
 export const accountSchema = yup.object().shape({
@@ -6,8 +6,8 @@ export const accountSchema = yup.object().shape({
         .string()
         .required("Avatar is required")
         .oneOf(
-            Object.keys(UserAvatar),
-            `Avatar must be one of: ${Object.keys(UserAvatar)}`
+            Object.keys(PlayerAvatar),
+            `Avatar must be one of: ${Object.keys(PlayerAvatar)}`
         ),
     username: yup.string().required("Username is required"),
     email: yup

@@ -12,8 +12,8 @@ import {
 import useLocale from "@/hooks/useLocale";
 import { useEffect, useState } from "react";
 import CasinoIcon from "@mui/icons-material/Casino";
-import { userAvatarMapping } from "@/utils/constants";
-import { UserAvatar } from "@/utils/enums";
+import { playerAvatarMapping } from "@/utils/constants";
+import { PlayerAvatar } from "@/utils/enums";
 import LanguageIcon from "@mui/icons-material/Language";
 import NavItems from "./navItems";
 import { useSelector } from "react-redux";
@@ -26,15 +26,15 @@ const Header = () => {
     const { getDictLocales, toggleLocale } = useLocale();
     const { header } = getDictLocales();
     const [boxIsOpen, setBoxIsOpen] = useState(false);
-    const { session, user } = useSelector(selectAuth);
+    const { session, player } = useSelector(selectAuth);
     const [avatarImage, setAvatarImage] = useState(
         "/images/avatar-placeholder.png"
     );
 
     useEffect(() => {
         if (session?.access_token)
-            setAvatarImage(userAvatarMapping()[user?.avatar as UserAvatar]);
-    }, [session?.access_token, user?.avatar]);
+            setAvatarImage(playerAvatarMapping()[player?.avatar as PlayerAvatar]);
+    }, [session?.access_token, player?.avatar]);
 
     useEffect(() => {
         setBoxIsOpen(false);

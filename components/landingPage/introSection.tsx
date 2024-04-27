@@ -18,23 +18,23 @@ const IntroSection = () => {
         <Container
             sx={{
                 display: "grid",
-                gridTemplateColumns: "70% 30%",
-                gridTemplateRows: "1fr 1fr 4fr",
+                gridTemplateColumns: "70%",
+                gridTemplateRows: "1fr 1fr 3fr",
                 p: "50px",
                 height: "70vh",
             }}
         >
-            <Typography variant="h2">{landingPage.welcome}</Typography>
+            <Typography variant="h3">{landingPage.welcome}</Typography>
 
-            <AnimatedBoard
+            {/* <AnimatedBoard
                 sx={{
                     gridRow: "span 4",
                     m: "auto",
                 }}
-            />
+            /> */}
 
             <Typography
-                variant="h4"
+                variant="h5"
                 m="auto 0"
                 sx={{
                     opacity: 0.8,

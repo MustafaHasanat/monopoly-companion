@@ -18,7 +18,7 @@ interface Props {
 const WaitingGame = ({ setCords }: Props) => {
     const { getDictLocales } = useLocale();
     const { lobby } = getDictLocales();
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
     const { game } = useSelector(selectGame);
     const dispatch = useDispatch();
 
@@ -26,21 +26,21 @@ const WaitingGame = ({ setCords }: Props) => {
     const [gameCode, setGameCode] = useState("--------");
 
     useEffect(() => {
-        // const getData = async () => {
-        //     const hostData = await getUserById({ id: game.banker_id });
-        //     console.log(hostData);
-        // };
-        // getData();
+        const getData = async () => {
+            const hostData = await getUserById({ id: game.banker_id });
+            if (!hostData?.error && hostData?.data.user?.user_metadata?.username)
+                setHost(hostData.data.user.user_metadata.username);
+        };
+        getData();
 
-        if (user) setHost(user.username);
         if (game) setGameCode(game.code);
-    }, [game, user]);
+    }, [game, player]);
 
     const handleCancel = async () => {
         await cancelJoiningProcess({
             dispatch,
             game,
-            user,
+            player,
         });
         setCords(LOBBY_CORDS.join);
     };

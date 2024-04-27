@@ -1,21 +1,30 @@
+"use client";
+
 import { User } from "@supabase/supabase-js";
 import { Player } from "../types";
-import { UserAvatar, UserStatus } from "../enums";
+import { PlayerAvatar, PlayerStatus } from "../enums";
 import { INITIAL_PLAYER_DATA } from "../constants";
+import { getUserAndSessionData } from "@/app/[locale]/auth/action";
 
-export const normalizeUser = (user: User | null): Player => {
-    if (user && user.user_metadata) {
+export const normalizeRemotePlayer = (remotePlayer: User | null): Player => {
+    if (remotePlayer && remotePlayer.user_metadata) {
         return {
-            id: user.id,
-            created_at: user.created_at,
-            email: user.user_metadata?.email as string,
-            username: user.user_metadata?.username as string,
-            credit: user.user_metadata?.credit as number,
-            avatar: user.user_metadata?.avatar as UserAvatar,
-            status: user.user_metadata?.status as UserStatus,
-            game_id: user.user_metadata?.game_id as string,
+            id: remotePlayer.id,
+            created_at: remotePlayer.created_at,
+            email: remotePlayer.user_metadata?.email as string,
+            username: remotePlayer.user_metadata?.username as string,
+            credit: remotePlayer.user_metadata?.credit as number,
+            avatar: remotePlayer.user_metadata?.avatar as PlayerAvatar,
+            status: remotePlayer.user_metadata?.status as PlayerStatus,
+            game_id: remotePlayer.user_metadata?.game_id as string,
         };
     } else {
         return INITIAL_PLAYER_DATA;
     }
+};
+
+export const refetchUserData = async () => {
+    const { remotePlayer } = await getUserAndSessionData();
+    const player = normalizeRemotePlayer(remotePlayer);
+    return player;
 };

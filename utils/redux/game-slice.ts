@@ -12,6 +12,9 @@ const initialState = {
     players: [],
 } as initialStateProps;
 
+const findPlayer = (id: string, players: Player[]): Player[] =>
+    players.filter((player) => player.id === id);
+
 export const gameSlice = createSlice({
     name: "game",
     initialState,
@@ -27,9 +30,25 @@ export const gameSlice = createSlice({
         },
         addPlayer: (
             state: { players: Player[] },
-            { payload: { player } }: StorePayload<{ player: Player }>,
+            { payload: { player: newPlayer } }: StorePayload<{ player: Player }>,
         ) => {
-            state.players.push(player);
+            if (findPlayer(newPlayer.id, state.players).length === 0) {
+                state.players.push(newPlayer);
+            }
+        },
+        editPlayer: (
+            state: { players: Player[] },
+            {
+                payload: { playerId, playerData },
+            }: StorePayload<{ playerId: string; playerData: Partial<Player> }>,
+        ) => {
+            const playersResult = findPlayer(playerId, state.players);
+
+            if (playersResult.length !== 0) {
+                state.players = state.players.map((player) =>
+                    player.id === playerId ? { ...player, ...playerData } : player,
+                );
+            }
         },
         removePlayer: (
             state: { players: Player[] },
@@ -43,6 +62,7 @@ export const gameSlice = createSlice({
     },
 });
 
-export const { setGame, addPlayer, removePlayer, clearPlayers } = gameSlice.actions;
+export const { setGame, addPlayer, removePlayer, clearPlayers, clearGame, editPlayer } =
+    gameSlice.actions;
 
 export const selectGame = (state: { game: initialStateProps }) => state.game;

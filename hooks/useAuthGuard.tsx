@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import LoadingPage from "@/components/shared/loading";
 import { selectGame } from "@/utils/redux/game-slice";
-import { UserStatus } from "@/utils/enums";
+import { PlayerStatus } from "@/utils/enums";
 
 interface Props {
     page: "account" | "lobby" | "game" | "auth";
@@ -20,7 +20,7 @@ interface ReturnProps {
 const useAuthGuard = ({ page }: Props): ReturnProps => {
     const { getDictLocales } = useLocale();
     const { global } = getDictLocales();
-    const { session, user } = useSelector(selectAuth);
+    const { session, player } = useSelector(selectAuth);
     const { game } = useSelector(selectGame);
     const router = useRouter();
     const pathname = usePathname();
@@ -37,11 +37,11 @@ const useAuthGuard = ({ page }: Props): ReturnProps => {
     // is user currently playing a game?
     const isGamer =
         !!game.code &&
-        game.id === user.game_id &&
-        [UserStatus.BANKER, UserStatus.CITIZEN].includes(user.status);
+        game.id === player.game_id &&
+        [PlayerStatus.BANKER, PlayerStatus.CITIZEN].includes(player.status);
     // is the user in the waiting room
     const isAwaiting =
-        !!game.code && game.id === user.game_id && user.status === UserStatus.AWAITING;
+        !!game.code && game.id === player.game_id && player.status === PlayerStatus.AWAITING;
 
     // check the the user data and user current path to decide what to do with them
     useEffect(() => {

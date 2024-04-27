@@ -29,10 +29,6 @@ export type BroadcastPayload<PayloadType> = {
     type: "broadcast";
 };
 
-export type ResponseEventType = {
-    response: "accepted" | "rejected";
-};
-
 export type BankerActionEventType = {
     kick: {
         playerId: string;

@@ -1,11 +1,11 @@
-export enum UserStatus {
+export enum PlayerStatus {
     BANKER = "banker", // currently the bank
     CITIZEN = "citizen", // currently playing
     AWAITING = "awaiting", // waiting for the banker to let him in
     GHOST = "ghost", // not playing
 }
 
-export enum UserAvatar {
+export enum PlayerAvatar {
     M1 = "M1",
     M2 = "M2",
     M3 = "M3",

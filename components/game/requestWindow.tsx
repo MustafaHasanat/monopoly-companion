@@ -10,14 +10,11 @@ import useLocale from "@/hooks/useLocale";
 import { ContainedButton } from "../shared/button";
 import { useDispatch, useSelector } from "react-redux";
 import { requestCredit } from "@/app/[locale]/game/action";
-import { selectAuth } from "@/utils/redux/auth-slice";
-import { selectGame } from "@/utils/redux/game-slice";
+
 import { snackbarAlert } from "@/utils/helpers";
 
 const RequestWindow = () => {
     const { getDictLocales } = useLocale();
-    const { user } = useSelector(selectAuth);
-    const { game: gameObj } = useSelector(selectGame);
     const dispatch = useDispatch();
     const { game } = getDictLocales();
 

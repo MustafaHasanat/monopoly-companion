@@ -23,7 +23,7 @@ const CreateGame = ({ setCords }: { setCords: Dispatch<SetStateAction<CordsType>
     const { lobby } = getDictLocales();
     const router = useRouter();
     const dispatch = useDispatch();
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
 
     const {
         control,
@@ -39,14 +39,14 @@ const CreateGame = ({ setCords }: { setCords: Dispatch<SetStateAction<CordsType>
     const onSubmit = async (formData: { template: string }) => {
         const response = await createNewGame({
             template: formData.template,
-            banker_id: user.id,
+            banker_id: player.id,
         });
 
         if (!response.error) {
             snackbarAlert("Game is created successfully", "success", dispatch);
             // start the game
             await startTheGameProcess({
-                user,
+                player,
                 game: response.data[0],
                 dispatch,
             });

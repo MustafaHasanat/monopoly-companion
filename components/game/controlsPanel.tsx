@@ -18,10 +18,10 @@ import { selectGame } from "@/utils/redux/game-slice";
 const ControlsPanel = () => {
     const pathname = usePathname();
     const theme = useTheme();
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
     const { game: gameObj } = useSelector(selectGame);
 
-    const isBankerPlayer = user.id === gameObj.banker_id;
+    const isBankerPlayer = player.id === gameObj.banker_id;
 
     const iconStyles: SxProps = {
         height: "100%",

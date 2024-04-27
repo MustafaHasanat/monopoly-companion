@@ -120,6 +120,8 @@ const en = {
             active: "Active",
             broke: "Broke",
             kick: "Kick out",
+            accept: "Accept",
+            reject: "Reject",
             controls: "Controls Section",
             actions: "Actions",
             endButton: "End the game for all",

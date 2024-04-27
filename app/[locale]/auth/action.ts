@@ -1,8 +1,8 @@
 "use server";
 
 import { createAdminClient, createClient } from "@/utils/supabase/server";
-import { UserAvatar, UserStatus } from "@/utils/enums";
-import { AdminUserAttributes, UserAttributes } from "@supabase/supabase-js";
+import { PlayerStatus, PlayerAvatar } from "@/utils/enums";
+import { UserAttributes } from "@supabase/supabase-js";
 
 export async function login({ email, password }: { email: string; password: string }) {
     const supabase = createClient();
@@ -32,10 +32,10 @@ export async function register({
         options: {
             data: {
                 username,
-                avatar: UserAvatar.M1,
+                avatar: PlayerAvatar.M1,
                 credit: 0,
                 game_id: null,
-                status: UserStatus.GHOST,
+                status: PlayerStatus.GHOST,
             },
         },
     });
@@ -66,10 +66,29 @@ export async function getUserById({ id }: { id: string }) {
     return response;
 }
 
-export async function updateUserById(id: string, attributes: UserAttributes) {
+export async function updateUserById({
+    id,
+    attributes,
+}: {
+    id: string;
+    attributes: { [key: string]: string | number | null };
+}) {
     const supabase = createAdminClient();
 
-    const response = await supabase.auth.admin.updateUserById(id, attributes);
+    const response = await supabase.auth.admin.updateUserById(id, {
+        user_metadata: attributes,
+    });
 
     return response;
+}
+
+export async function getUserAndSessionData() {
+    const supabase = createClient();
+    const remotePlayerResponse = await supabase.auth.getUser();
+    const sessionResponse = await supabase.auth.getSession();
+
+    return {
+        remotePlayer: remotePlayerResponse.data.user,
+        session: sessionResponse.data.session,
+    };
 }

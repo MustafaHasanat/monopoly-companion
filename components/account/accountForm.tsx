@@ -7,8 +7,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Avatar, Grid, Typography } from "@mui/material";
 import { SelectBox, TextFieldForm } from "../shared/form";
 import useLocale from "@/hooks/useLocale";
-import { UserAvatar } from "@/utils/enums";
-import { AVATAR_PLACEHOLDER, userAvatarMapping } from "@/utils/constants";
+import { PlayerAvatar } from "@/utils/enums";
+import { AVATAR_PLACEHOLDER, playerAvatarMapping } from "@/utils/constants";
 import { ContainedButton } from "../shared/button";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "@/utils/redux/auth-slice";
@@ -20,7 +20,7 @@ import { updateUser } from "@/app/[locale]/auth/action";
 const AccountForm = () => {
     const { getDictLocales } = useLocale();
     const { auth } = getDictLocales();
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
     const dispatch = useDispatch();
     const { isAccessible, loadingComponent } = useAuthGuard({
         page: "account",
@@ -43,13 +43,13 @@ const AccountForm = () => {
     });
 
     useEffect(() => {
-        if (user) {
-            setValue("username", user.username);
-            setValue("email", user.email);
-            setValue("avatar", user.avatar);
-            setAvatarURL(userAvatarMapping()[watch("avatar") as UserAvatar]);
+        if (player) {
+            setValue("username", player.username);
+            setValue("email", player.email);
+            setValue("avatar", player.avatar);
+            setAvatarURL(playerAvatarMapping()[watch("avatar") as PlayerAvatar]);
         }
-    }, [user]);
+    }, [player]);
 
     const onSubmit = async ({
         email,
@@ -115,11 +115,11 @@ const AccountForm = () => {
                         render={({ field }) => (
                             <SelectBox
                                 {...field}
-                                initialValue={UserAvatar.M1}
-                                defaultValue={UserAvatar.M1}
+                                initialValue={PlayerAvatar.M1}
+                                defaultValue={PlayerAvatar.M1}
                                 label={auth.avatar}
-                                values={Object.keys(UserAvatar)}
-                                labels={Object.values(userAvatarMapping(true))}
+                                values={Object.keys(PlayerAvatar)}
+                                labels={Object.values(playerAvatarMapping(true))}
                                 error={!!errors.avatar}
                                 helperText={errors.avatar?.message}
                             />
@@ -131,7 +131,7 @@ const AccountForm = () => {
                 </Grid>
                 <Grid item mobile={5} m="auto">
                     <Avatar
-                        src={userAvatarMapping()[watch("avatar") as UserAvatar]}
+                        src={playerAvatarMapping()[watch("avatar") as PlayerAvatar]}
                         alt="avatar"
                         sx={{
                             width: "50px",

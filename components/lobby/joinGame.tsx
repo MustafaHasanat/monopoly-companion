@@ -28,7 +28,7 @@ const JoinGame = ({ setCords }: Props) => {
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
     const code = searchParams.get("code");
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
 
     const {
         control,
@@ -51,7 +51,7 @@ const JoinGame = ({ setCords }: Props) => {
                 // start the joining process
                 await joinTheGameProcess({
                     game: response.data[0],
-                    user,
+                    player,
                     dispatch,
                 });
                 setCords(LOBBY_CORDS.waiting);

@@ -2,7 +2,7 @@
 
 import useLocale from "@/hooks/useLocale";
 import useAsyncStates from "@/hooks/useAsyncStates";
-import { AVATAR_PLACEHOLDER, userAvatarMapping } from "@/utils/constants";
+import { AVATAR_PLACEHOLDER, playerAvatarMapping } from "@/utils/constants";
 import { selectAuth } from "@/utils/redux/auth-slice";
 import { selectGame } from "@/utils/redux/game-slice";
 import { Avatar, Divider, Grid, List, Typography, useTheme } from "@mui/material";
@@ -12,7 +12,7 @@ import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import PowerSettingsNewRoundedIcon from "@mui/icons-material/PowerSettingsNewRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import { UserStatus } from "@/utils/enums";
+import { PlayerStatus } from "@/utils/enums";
 import { endTheGameProcess, snackbarAlert } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -20,34 +20,36 @@ import PlayerCard from "./playerCard";
 
 const MainWindow = () => {
     const { game: gameObj, players } = useSelector(selectGame);
-    const { user } = useSelector(selectAuth);
+    const { player } = useSelector(selectAuth);
     const dispatch = useDispatch();
     const { getDictLocales } = useLocale();
     const { game } = getDictLocales();
     const theme = useTheme();
     const router = useRouter();
 
-    const [avatarImg, username, userCredit, userStatus, gameCode] = useAsyncStates({
-        dependents: [user, gameObj],
-        initialStates: [AVATAR_PLACEHOLDER, "", 0, UserStatus.GHOST, ""],
+    const [avatarImg, username, playerCredit, playerStatus, gameCode] = useAsyncStates({
+        dependents: [player, gameObj],
+        initialStates: [AVATAR_PLACEHOLDER, "", 0, PlayerStatus.GHOST, ""],
         finalStates: [
-            userAvatarMapping()[user.avatar],
-            user.username,
-            user.credit,
-            user.status,
+            playerAvatarMapping()[player.avatar],
+            player.username,
+            player.credit,
+            player.status,
             gameObj.code,
         ],
     });
 
     const handleRedButton = async () => {
-        userStatus === UserStatus.BANKER;
         await endTheGameProcess({
-            user,
+            player,
             game: gameObj,
             dispatch,
+            currentPlayers: players,
         });
-        // redirect the user
-        router.replace("/lobby");
+        setTimeout(() => {
+            // redirect the user
+            router.replace("/lobby");
+        }, 2000);
     };
 
     const handleWhatsappShare = () => {
@@ -95,13 +97,13 @@ const MainWindow = () => {
                         <Typography
                             variant="h6"
                             sx={{ opacity: 0.7 }}
-                        >{`${game.main.credit}${userCredit}$`}</Typography>
+                        >{`${game.main.credit}${playerCredit}$`}</Typography>
                     </Grid>
                     <Grid container item>
                         <Typography
                             variant="h6"
                             sx={{ opacity: 0.7 }}
-                        >{`${game.main.role}${userStatus}`}</Typography>
+                        >{`${game.main.role}${playerStatus}`}</Typography>
                     </Grid>
                 </Grid>
             </Grid>
@@ -178,7 +180,7 @@ const MainWindow = () => {
             <Grid container item justifyContent="center">
                 <ContainedButton
                     startIcon={
-                        userStatus === UserStatus.BANKER ? (
+                        playerStatus === PlayerStatus.BANKER ? (
                             <PowerSettingsNewRoundedIcon />
                         ) : (
                             <LogoutRoundedIcon />
@@ -190,7 +192,7 @@ const MainWindow = () => {
                         backgroundColor: theme.palette.error.main,
                     }}
                 >
-                    {userStatus === UserStatus.BANKER ? game.main.end : game.main.leave}
+                    {playerStatus === PlayerStatus.BANKER ? game.main.end : game.main.leave}
                 </ContainedButton>
             </Grid>
         </>

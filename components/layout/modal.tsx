@@ -1,6 +1,6 @@
 "use client";
 
-import { controlsSlice, selectControls } from "@/utils/redux/controls-slice";
+import { selectControls, setModalContent } from "@/utils/redux/controls-slice";
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,7 @@ const Modal = () => {
             component="button"
             onClick={() => {
                 dispatch(
-                    controlsSlice.actions.setModalContent({
+                    setModalContent({
                         modalContent: "form",
                     })
                 );
